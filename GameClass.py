@@ -64,7 +64,7 @@ class Game:
     def fives(self): # this method is to be used by the button for fives
         self.scoresheet.fives = self.scoresheet.score_upper(self.dice_list, 5)
         self.reset_rerolls()
-    
+
     def sixes(self): # this method is to be used by the button for sixes
         self.scoresheet.sixes = self.scoresheet.score_upper(self.dice_list, 6)
         self.reset_rerolls()
