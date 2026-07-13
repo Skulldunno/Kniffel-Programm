@@ -15,6 +15,7 @@ class Game:
 
     def game_over_check(self): # this method checks if the game is over and all scoresheet fields are filled
         if None not in self.scoresheet.__dict__.values():
+            self.score_bonus()
             print("Game Over")
 
     def reset_rerolls(self): # This method resets the rerolls. should be triggered every round
@@ -29,6 +30,12 @@ class Game:
     def print_all_dice(self): # This method prints out the eyecount of every die. for now only usefull for debugging
         for die in self.dice_list:
             print(die.get_eyes())
+
+    def score_bonus(self):
+        if [self.scoresheet.ones + self.scoresheet.twos + self.scoresheet.threes + self.scoresheet.fours + self.scoresheet.fives + self.scoresheet.sixes] >= 63 :
+            self.scoresheet.bonus = 35
+        else:
+            self.scoresheet.bonus = 0
 
     def ones(self): # this method is to be used by the button for ones
         self.scoresheet.ones = self.scoresheet.score_upper(self.dice_list, 1)
