@@ -18,6 +18,50 @@ class Label:
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
+class ShowLabel:
+    def __init__(self, text, rect, font_size=32, color=(0, 0, 0)):
+        self.text = text
+        self.position = (rect[0], rect[1])
+        self.color = color
+
+        self.label_rect = pygame.Rect(rect[0] - (rect[2]/2), rect[1] - (rect[3]/2), rect[2], rect[3])
+
+        self.font = pygame.font.Font(None, font_size)
+        self.image = self.font.render(
+            self.text,
+            True,
+            self.color
+        )
+
+        self.rect = self.image.get_rect(center=(rect[0], rect[1]))
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.color, self.label_rect, 2, 20)
+        surface.blit(self.image, self.rect)      
+
+class Lamp:
+    def __init__(self, rect, color_off=(255, 255, 255), color_on=(255, 0, 0), state = False, border_radius=-1, width=1):
+        self.rect = pygame.Rect(rect)
+        self.border_radius = border_radius
+        self.color_off = color_off
+        self.color_on = color_on
+        self.state = state
+        self.width = width
+    
+    def draw(self, surface):
+        if self.state:
+            pygame.draw.rect(surface, self.color_on, self.rect, border_radius=self.border_radius)
+            pygame.draw.rect(surface, (0, 0, 0), self.rect, self.width, self.border_radius)
+        else:
+            pygame.draw.rect(surface, self.color_off, self.rect, border_radius=self.border_radius)
+            pygame.draw.rect(surface, (0, 0, 0), self.rect, self.width, self.border_radius)
+
+    def switch_state(self):
+        if self.state:
+            self.state = False
+        else:
+            self.state = True
+
 class Button:
     def __init__(self, text, rect, color=(255, 255, 255), hover_color=(171, 171, 171), text_color=(0, 0, 0), font_size=32):
         self.text = text
