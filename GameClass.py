@@ -89,6 +89,10 @@ class Game:
         self.scoresheet.chance = self.scoresheet.score_chance(self.dice_list)
         self.reset_rerolls()
 
+    # This Methods are meant to lock or unlock the die of corresponding number and used for the buttons of these die
+    def lock_unlock_die(self, number):
+        self.dice_list[number - 1].lock_unlock()
+    
 if __name__ == "__main__":
     game = Game()
     game.game_loop()
