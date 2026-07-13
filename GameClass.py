@@ -17,25 +17,70 @@ class Game:
         if None not in self.scoresheet.__dict__.values():
             print("Game Over")
 
-    def game_loop(self): # This method starts the game loop and thus counts down 13 Rounds
-        # might be useless as we are using pygame
-        while self.__rounds_left != 0:
-            self.__rounds_left -= 1
-            self._round_loop()
-
-    def _round_loop(self): # This method starts a round loop, which is just a reset of rerolls and not an actual loop
-        # might also be useless as we are using pygame
+    def reset_rerolls(self): # This method resets the rerolls. should be triggered every round
         self.__rerolls_left = 3
         
-    def roll_all_dice(self): # This method rolls every die or the locked die will not get rolled can only be rolled a max of 3 times
+    def roll_all_dice(self): # This method rolls every die or the locked die will not get rolled. can only be rolled a max of 3 times
         if self.__rerolls_left < 0:
             for die in self.dice_list:
                 die.roll()
             self.__rerolls_left -=0
 
-    def print_all_dice(self): # This method prints out the eyecount of every die for now only usefull for debugging
+    def print_all_dice(self): # This method prints out the eyecount of every die. for now only usefull for debugging
         for die in self.dice_list:
             print(die.get_eyes())
+
+    def ones(self): # this method is to be used by the button for ones
+        self.scoresheet.ones = self.scoresheet.score_upper(self.dice_list, 1)
+        self.reset_rerolls()
+
+    def twos(self): # this method is to be used by the button for twos
+        self.scoresheet.twos = self.scoresheet.score_upper(self.dice_list, 2)
+        self.reset_rerolls()
+
+    def threes(self): # this method is to be used by the button for threes
+        self.scoresheet.threes = self.scoresheet.score_upper(self.dice_list, 3)
+        self.reset_rerolls()
+    
+    def fours(self): # this method is to be used by the button for fours
+        self.scoresheet.fours = self.scoresheet.score_upper(self.dice_list, 4)
+        self.reset_rerolls()
+    
+    def fives(self): # this method is to be used by the button for fives
+        self.scoresheet.fives = self.scoresheet.score_upper(self.dice_list, 5)
+        self.reset_rerolls()
+    
+    def sixes(self): # this method is to be used by the button for sixes
+        self.scoresheet.sixes = self.scoresheet.score_upper(self.dice_list, 6)
+        self.reset_rerolls()
+    
+    def three_of_a_kind(self): # this method is to be used by the button for three of a kind
+        self.scoresheet.three_of_a_kind = self.scoresheet.score_three_of_a_kind(self.dice_list)
+        self.reset_rerolls()
+
+    def four_of_a_kind(self): # this method is to be used by the button for four of a kind
+        self.scoresheet.four_of_a_kind = self.scoresheet.score_four_of_a_kind(self.dice_list)
+        self.reset_rerolls()
+    
+    def full_house(self): # this method is to be used by the button for full house
+        self.scoresheet.full_house = self.scoresheet.score_full_house(self.dice_list)
+        self.reset_rerolls()
+
+    def small_straight(self): # this method is to be used by the button for small straight
+        self.scoresheet.small_straight = self.scoresheet.score_small_straight(self.dice_list)
+        self.reset_rerolls()
+
+    def large_straight(self): # this method is to be used by the button for large straight
+        self.scoresheet.large_straight = self.scoresheet.score_large_straight(self.dice_list)
+        self.reset_rerolls()
+
+    def kniffel(self): # this method is to be used by the button for kniffel
+        self.scoresheet.kniffel = self.scoresheet.score_kniffel(self.dice_list)
+        self.reset_rerolls()
+
+    def chance(self): # this method is to be used by the button for chance
+        self.scoresheet.chance = self.scoresheet.score_chance(self.dice_list)
+        self.reset_rerolls()
 
 if __name__ == "__main__":
     game = Game()

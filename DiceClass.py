@@ -5,14 +5,14 @@ class Dice:
         self.__eyes = eyes
         self.__locked = locked
 
-    def roll(self):
+    def roll(self): # This Method rolls the die and gives random number from 1 to 6
         if self.__locked == False:
             self.__eyes = random.randint(1,6)
 
-    def get_eyes(self):
+    def get_eyes(self): # This Method gets the eye count
         return self.__eyes
     
-    def lock_unlock(self):
+    def lock_unlock(self): # This Method either locks or unlocks the die based on the previous state
         if self.__locked == False:
             self.__locked = True
         else:
