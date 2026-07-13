@@ -61,7 +61,7 @@ class Button:
             surface,
             (0, 0, 0),
             self.rect,
-            1,
+            2,
             20
         )
 
@@ -79,3 +79,15 @@ class Button:
             text_image,
             text_rect
         )
+
+class ArrowRight:
+    def __init__(self, position, length, color=(0, 0, 0)):
+        self.position = (position[0] - (length/2), position[1])
+        self.end_position = (self.position[0] + length, self.position[1])
+        self.length = length
+        self.color = color
+    
+    def draw(self, surface):
+        pygame.draw.line(surface, self.color, self.position, (self.position[0]  + self.length, self.position[1]), 2)
+        pygame.draw.line(surface, self.color, self.end_position, (self.end_position[0] - 10, self.end_position[1] - 10), 2)
+        pygame.draw.line(surface, self.color, self.end_position, (self.end_position[0] - 10, self.end_position[1] + 10), 2)
