@@ -4,7 +4,7 @@ import scoresheet as scoshe
 class Game:
     def __init__(self):
         self.__rerolls_left = 3
-        self.__rounds_left = 13
+        self.__kniffel_rolled = False
         dice1 = D.Dice()
         dice2 = D.Dice()
         dice3 = D.Dice()
@@ -16,6 +16,7 @@ class Game:
     def game_over_check(self): # this method checks if the game is over and all scoresheet fields are filled
         if None not in self.scoresheet.__dict__.values():
             self.score_bonus()
+            self.tally_total()
             print("Game Over")
 
     def reset_rerolls(self): # This method resets the rerolls. should be triggered every round
@@ -25,14 +26,21 @@ class Game:
         if self.__rerolls_left < 0:
             for die in self.dice_list:
                 die.roll()
-            self.__rerolls_left -=0
+            self.__rerolls_left -= 1
 
     def print_all_dice(self): # This method prints out the eyecount of every die. for now only usefull for debugging
         for die in self.dice_list:
             print(die.get_eyes())
 
+    def score_upper_part(self):
+        upper_part = [self.scoresheet.ones + self.scoresheet.twos + self.scoresheet.threes + self.scoresheet.fours + self.scoresheet.fives + self.scoresheet.sixes]
+        for number in upper_part:
+            if type(number) == int:
+                total += number
+        return total
+
     def score_bonus(self):
-        if [self.scoresheet.ones + self.scoresheet.twos + self.scoresheet.threes + self.scoresheet.fours + self.scoresheet.fives + self.scoresheet.sixes] >= 63 :
+        if self.score_upper_part() >= 63 :
             self.scoresheet.bonus = 35
         else:
             self.scoresheet.bonus = 0
@@ -93,7 +101,10 @@ class Game:
     def lock_unlock_die(self, number):
         self.dice_list[number - 1].lock_unlock()
     
+    def tally_total(self):
+        x = self.scoresheet.__dict__
+        return
 if __name__ == "__main__":
     game = Game()
-    game.game_loop()
     game.game_over_check()
+    game.tally_total()

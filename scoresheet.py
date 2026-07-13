@@ -1,7 +1,5 @@
 class ScoreSheet:
-    def __init__(self, name: str = ""):
-        self.name = name
-
+    def __init__(self):
         # Oben
         self.ones = None
         self.twos = None
