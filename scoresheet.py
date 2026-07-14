@@ -16,7 +16,10 @@ class ScoreSheet:
         self.small_straight = None
         self.large_straight = None
         self.kniffel = None
+        self.kniffel_bonus = None
         self.chance = None
+
+        self.kniffel_count = 0
 
     # Hilfsfunktionen
     def _values(self, dice_list: list["Dice"]) -> list[int]:
@@ -67,3 +70,21 @@ class ScoreSheet:
 
     def score_chance(self, dice_list):
         return sum(self._values(dice_list))
+
+    def check_kniffel(self, dice_list):
+        values = self._values(dice_list)
+
+        if len(set(values)) == 1:
+            self.kniffel_count += 1
+
+            if self.kniffel_count == 1:
+                self.kniffel = 50
+                return 50
+            
+            else:
+                if self.kniffel_bonus is None:
+                    self.kniffel_bonus = 0
+                self.kniffel_bonus += 50
+                return 50
+
+        return 0
