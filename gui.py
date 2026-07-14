@@ -1,0 +1,295 @@
+import pygame
+import widgets
+
+
+class Gui:
+    def __init__(self):
+        pygame.init()
+
+        pygame.display.set_icon(pygame.image.load("./assets/icon.png"))
+        self.screen = pygame.display.set_mode((800, 800))
+        self.clock = pygame.time.Clock()
+        pygame.display.set_caption("Kniffel Programm")
+
+        self.current_screen = GameScreen(self)
+
+        self.iconchanger = IconChanger()
+
+    def change_screen(self, new_screen):
+        self.current_screen = new_screen
+
+    def start(self):
+        running = True
+
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                self.current_screen.handle_events(event)
+
+            self.current_screen.update()
+            self.current_screen.draw(self.screen)
+
+            self.iconchanger.increment_frame_counter()
+            pygame.display.set_icon(pygame.image.load(f"./assets/{self.iconchanger.icon_list[self.iconchanger.icon_index]}"))
+
+            pygame.display.flip()
+            self.clock.tick(60)
+
+        pygame.quit()
+
+
+class IconChanger:
+    def __init__(self):
+        self.icon_list = [
+            "icon_one.png",
+            "icon_two.png", 
+            "icon_three.png",
+            "icon_four.png",
+            "icon_five.png",
+            "icon_six.png"
+            ]
+        self.icon_index = 5
+        self.frame_counter = 0
+
+    def increment_index(self):
+        if self.icon_index == 5:
+            self.icon_index = 0
+        else:
+            self.icon_index += 1
+
+    def increment_frame_counter(self):
+        if self.frame_counter == 60:
+            self.frame_counter = 0
+            self.increment_index()
+        else:
+            self.frame_counter += 1
+
+
+class Screen:
+    def __init__(self, manager):
+        self.manager = manager
+
+    def handle_events(self, event):
+        pass
+
+    def update(self):
+        pass
+
+    def draw(self, surface):
+        pass
+
+class StartScreen(Screen):
+    def __init__(self, manager):
+        super().__init__(manager)
+
+        self.title_lable = widgets.Label("KNIFFEL", (400, 37.5), 80)
+
+        self.highscore_rect = pygame.Rect((50, 85, 700, 75))
+        self.highscore_label = widgets.Label("HI-SCORE", (400, 122.5), 60)
+
+        self.highscores_rect = pygame.Rect((200, 170, 400, 500))
+        self.highscores_label = widgets.Label("NAME ---> XXX", (400, 195), 40)
+
+        self.start_button = widgets.Button("Start", (225, 700, 350, 60))
+        self.start_button.set_action(self.start_game)
+
+    def start_game(self):
+        self.manager.change_screen(GameScreen(self.manager))
+
+    def handle_events(self, event):
+        self.start_button.handle_event(event)
+
+    def draw(self, surface):
+        surface.fill((255, 255, 255))
+
+        pygame.draw.line(surface, (0, 0, 0), (0, 75), (800, 75), 2)
+        self.title_lable.draw(surface)
+
+        pygame.draw.rect(surface, (0, 0, 0), self.highscore_rect, 2, 20)
+        self.highscore_label.draw(surface)
+
+        pygame.draw.rect(surface, (0, 0, 0), self.highscores_rect, 2, 20)
+        self.highscores_label.draw(surface)
+
+        self.start_button.draw(surface)
+
+class GameScreen(Screen):
+    def __init__(self, manager):
+        super().__init__(manager)
+
+        self.title_lable = widgets.Label("Kniffel Gewinnkarte", (400, 37.5), 40)
+
+        self.upper_left_rect = pygame.Rect((0, 75, 400, 275))
+        self.ones_label = widgets.Label("nur Einser zählen", (100, 95), 26)
+        self.arrow_ones = widgets.ArrowRight((200, 95), 30)
+        self.ones_button = widgets.Button("", (235, 82.5, 140, 25))
+        self.twos_label = widgets.Label("nur Zweier zählen", (100, 125), 26)
+        self.arrow_twos = widgets.ArrowRight((200, 125), 30)
+        self.twos_button = widgets.Button("", (235, 112.5, 140, 25))
+        self.threes_label = widgets.Label("nur Dreier zählen", (100, 155), 26)
+        self.arrow_threes = widgets.ArrowRight((200, 155), 30)
+        self.three_button = widgets.Button("", (235, 142.5, 140, 25))
+        self.fours_label = widgets.Label("nur Vierer zählen", (100, 185), 26)
+        self.arrow_fours = widgets.ArrowRight((200, 185), 30)
+        self.fours_button = widgets.Button("", (235, 172.5, 140, 25))
+        self.fives_label = widgets.Label("nur Fünfer zählen", (100, 215), 26)
+        self.arrow_fives = widgets.ArrowRight((200, 215), 30)
+        self.fives_button = widgets.Button("", (235, 202.5, 140, 25))
+        self.sixes_label = widgets.Label("nur Sechser zählen", (100, 245), 26)
+        self.arrow_sixes = widgets.ArrowRight((200, 245), 30)
+        self.sixes_button = widgets.Button("", (235, 232.5, 140, 25))
+        self.upper_sum_wo_bonus_label = widgets.Label("gesamt", (100, 275), 26)
+        self.upper_sum_wo_bonus_arrow = widgets.ArrowRight((200, 275), 30)
+        self.upper_sum_wo_bonus_show = widgets.ShowLabel("", (305, 275, 140, 25), 26)
+        self.bonus_label = widgets.Label("Bonus bei 63", (100, 305), 26)
+        self.bonus_arrow = widgets.ArrowRight((200, 305), 30)
+        self.bonus_show = widgets.ShowLabel("", (305, 305, 140, 25), 26)
+        self.upper_sum_label = widgets.Label("gesamt oberer Teil", (100, 335), 26)
+        self.upper_sum_arrow = widgets.ArrowRight((200, 335), 30)
+        self.upper_sum_show = widgets.ShowLabel("", (305, 335, 140, 25), 26)
+
+        self.upper_right_rect = pygame.Rect((400, 75, 400, 275))
+        self.roll_dice_board = pygame.Rect((420, 95, 265, 175))
+        self.safe_dice_board = pygame.Rect((705, 95, 75, 175))
+        self.roll_one_lamp = widgets.Lamp((420, 290, 40, 40), border_radius=20, width=2)
+        self.roll_two_lamp = widgets.Lamp((470, 290, 40, 40), border_radius=20, width=2)
+        self.roll_three_lamp = widgets.Lamp((520, 290, 40, 40), border_radius=20, width=2)
+        self.roll_dices_button = widgets.Button("Würfeln", (580, 290, 200, 40))
+
+        self.lower_left_rect = pygame.Rect((0, 350, 400, 350))
+        self.three_of_a_kind_label = widgets.Label("Dreierpasch", (100, 365), 26)
+        self.three_of_a_kind_arrow = widgets.ArrowRight((200, 365), 30)
+        self.three_of_a_kind_button = widgets.Button("", (235, 353.5, 140, 25))
+        self.four_of_a_kind_label = widgets.Label("Viererpasch", (100, 395), 26)
+        self.four_of_a_kind_arrow = widgets.ArrowRight((200, 395), 30)
+        self.four_of_a_kind_button = widgets.Button("", (235, 383.5, 140, 25))
+        self.full_house_label = widgets.Label("Full-House", (100, 425), 26)
+        self.full_house_arrow = widgets.ArrowRight((200, 425), 30)
+        self.full_house_button = widgets.Button("", (235, 412.5, 140, 25))
+        self.small_road_label = widgets.Label("Kleine Straße", (100, 455), 26 )
+        self.small_road_arrow = widgets.ArrowRight((200, 455), 30)
+        self.small_road_button = widgets.Button("", (235, 442.5, 140, 25))
+        self.big_road_label = widgets.Label("Große Straße", (100, 485), 26)
+        self.big_road_arrow = widgets.ArrowRight((200, 485), 30)
+        self.big_road_button = widgets.Button("", (235, 472.5, 140, 25))
+        self.kniffel_label = widgets.Label("Kniffel", (100, 515), 26)
+        self.kniffel_arrow = widgets.ArrowRight((200, 515), 30)
+        self.kniffel_button = widgets.Button("", (235, 502.5, 140, 25))
+        self.chance_label = widgets.Label("Chance", (100, 545), 26)
+        self.chance_arrow = widgets.ArrowRight((200, 545), 30)
+        self.chance_button = widgets.Button("",(235, 532.5, 140, 25))
+        self.lower_sum_label = widgets.Label("gesamt unterer Teil", (100, 575), 26)
+        self.lower_sum_arrow = widgets.ArrowRight((200, 575), 30)
+        self.lower_sum_show = widgets.ShowLabel("", (305, 575, 140, 25))
+        self.upper_sum_low_label = widgets.Label("gesamt oberer Teil", (100, 605), 26)
+        self.upper_sum_low_arrow = widgets.ArrowRight((200, 605), 30)
+        self.upper_sum_low_show = widgets.ShowLabel("", (305, 605, 140, 25))
+        self.extra_kniffel_label = widgets.Label("Punkte Extra Kniffel", (100, 635), 26)
+        self.extra_kniffel_arrow = widgets.ArrowRight((200, 635), 30)
+        self.extra_kniffel_show = widgets.ShowLabel("", (305, 635, 140, 25))
+        self.end_sum_label = widgets.Label("Endsumme", (100, 665), 26)
+        self.end_sum_arrow = widgets.ArrowRight((200, 665), 30)
+        self.end_sum_show = widgets.ShowLabel("", (305, 665, 140, 25))
+
+        self.lower_right_rect = pygame.Rect((400, 350, 400, 350))
+        self.error_messages_rect = pygame.Rect((420, 370, 360, 310))
+
+        self.start_new_game_button = widgets.Button("Start new Game", (200, 712.5, 195, 75))
+        self.home_button = widgets.Button("Home", (405, 712.5, 195, 75), font_size=40)
+        self.home_button.set_action(self.quit_game)
+        self.help_button = widgets.Button("Help", (680, 712.5, 80, 75))
+
+    def quit_game(self):
+        self.manager.change_screen(StartScreen(self.manager))
+
+    def handle_events(self, event):
+        self.home_button.handle_event(event)
+
+    def draw(self, surface):
+        surface.fill((255, 255, 255))
+
+        pygame.draw.line(surface, (0, 0, 0), (0, 75), (800, 75), 2)
+        self.title_lable.draw(surface)
+
+        pygame.draw.rect(surface, (0, 0, 0), self.upper_left_rect, 1)
+        self.ones_label.draw(surface)
+        self.arrow_ones.draw(surface)
+        self.ones_button.draw(surface)
+        self.twos_label.draw(surface)
+        self.arrow_twos.draw(surface)
+        self.twos_button.draw(surface)
+        self.threes_label.draw(surface)
+        self.arrow_threes.draw(surface)
+        self.three_button.draw(surface)
+        self.fours_label.draw(surface)
+        self.arrow_fours.draw(surface)
+        self.fours_button.draw(surface)
+        self.fives_label.draw(surface)
+        self.arrow_fives.draw(surface)
+        self.fives_button.draw(surface)
+        self.sixes_label.draw(surface)
+        self.arrow_sixes.draw(surface)
+        self.sixes_button.draw(surface)
+        self.upper_sum_wo_bonus_label.draw(surface)
+        self.upper_sum_wo_bonus_arrow.draw(surface)
+        self.upper_sum_wo_bonus_show.draw(surface)
+        self.bonus_label.draw(surface)
+        self.bonus_arrow.draw(surface)
+        self.bonus_show.draw(surface)
+        self.upper_sum_label.draw(surface)
+        self.upper_sum_arrow.draw(surface)
+        self.upper_sum_show.draw(surface)
+
+        pygame.draw.rect(surface, (0, 0, 0), self.upper_right_rect, 1)
+        pygame.draw.rect(surface, (0, 0, 0), self.roll_dice_board, 2, 20)
+        pygame.draw.rect(surface, (0, 0, 0), self.safe_dice_board, 2, 20)
+        self.roll_one_lamp.draw(surface)
+        self.roll_two_lamp.draw(surface)
+        self.roll_three_lamp.draw(surface)
+        self.roll_dices_button.draw(surface)
+
+        pygame.draw.rect(surface, (0, 0, 0), self.lower_left_rect, 1)
+        self.three_of_a_kind_label.draw(surface)
+        self.three_of_a_kind_arrow.draw(surface)
+        self.three_of_a_kind_button.draw(surface)
+        self.four_of_a_kind_label.draw(surface)
+        self.four_of_a_kind_arrow.draw(surface)
+        self.four_of_a_kind_button.draw(surface)
+        self.full_house_label.draw(surface)
+        self.full_house_arrow.draw(surface)
+        self.full_house_button.draw(surface)
+        self.small_road_label.draw(surface)
+        self.small_road_arrow.draw(surface)
+        self.small_road_button.draw(surface)
+        self.big_road_label.draw(surface)
+        self.big_road_arrow.draw(surface)
+        self.big_road_button.draw(surface)
+        self.kniffel_label.draw(surface)
+        self.kniffel_arrow.draw(surface)
+        self.kniffel_button.draw(surface)
+        self.chance_label.draw(surface)
+        self.chance_arrow.draw(surface)
+        self.chance_button.draw(surface)
+        self.lower_sum_label.draw(surface)
+        self.lower_sum_arrow.draw(surface)
+        self.lower_sum_show.draw(surface)
+        self.upper_sum_low_label.draw(surface)
+        self.upper_sum_low_arrow.draw(surface)
+        self.upper_sum_low_show.draw(surface)
+        self.extra_kniffel_label.draw(surface)
+        self.extra_kniffel_arrow.draw(surface)
+        self.extra_kniffel_show.draw(surface)
+        self.end_sum_label.draw(surface)
+        self.end_sum_arrow.draw(surface)
+        self.end_sum_show.draw(surface)
+
+        pygame.draw.rect(surface, (0, 0, 0), self.lower_right_rect, 1)
+        pygame.draw.rect(surface, (0, 0, 0), self.error_messages_rect, 2, 20)
+
+        pygame.draw.line(surface, (0, 0, 0), (0, 700), (800, 700), 2)
+        self.start_new_game_button.draw(surface)
+        self.home_button.draw(surface)
+        self.help_button.draw(surface)
+

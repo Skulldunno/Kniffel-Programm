@@ -1,1 +1,5 @@
-print("Hello World")
+from gui import Gui
+
+gui = Gui()
+
+gui.start()
