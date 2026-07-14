@@ -11,6 +11,7 @@ class Game:
         dice4 = D.Dice()
         dice5 = D.Dice()
         self.dice_list = (dice1, dice2, dice3, dice4, dice5)
+        self.__total = None
         self.scoresheet = scoshe.ScoreSheet()
 
     def game_over_check(self): # this method checks if the game is over and all scoresheet fields are filled
@@ -102,8 +103,8 @@ class Game:
         self.dice_list[number - 1].lock_unlock()
     
     def tally_total(self):
-        x = self.scoresheet.__dict__
-        return
+        self.__total = sum(self.scoresheet.__dict__.values())
+    
 if __name__ == "__main__":
     game = Game()
     game.game_over_check()
