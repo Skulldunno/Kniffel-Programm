@@ -62,6 +62,52 @@ class Lamp:
         else:
             self.state = True
 
+class LampLine:
+    def __init__(self):
+        self.__lamp_list = []
+
+    def add_lamp(self, lamp: Lamp):
+        if type(lamp) == Lamp:
+            self.__lamp_list.append(lamp)
+
+    def remove_lamp(self, lamp: Lamp):
+        if type(lamp) == Lamp and lamp in self.__lamp_list:
+            self.__lamp_list.remove(lamp)
+
+    def turn_all_on(self):
+        for lamps in self.__lamp_list:
+            lamps.state = True
+
+    def turn_all_off(self):
+        for lamps in self.__lamp_list:
+            lamps.state = False
+
+    def turn_lamp_on(self, lamp: Lamp):
+        if type(lamp) == Lamp:
+            for lamps in self.__lamp_list:
+                if lamps == lamp:
+                    lamp.state = True
+
+    def turn_lamp_off(self, lamp: Lamp):
+        if type(lamp) == Lamp:
+            for lamps in self.__lamp_list:
+                if lamps == lamp:
+                    lamp.state = False
+
+    def turn_number_of_lamps_on(self, number: int):
+        if number > len(self.__lamp_list):
+            return print(f"turn_number_of_lamps_on({number}): the number given is higher than the number of available lamps")
+        else:
+            for lamp in range(number):
+                self.__lamp_list[lamp].state = True
+
+    def turn_number_of_lamps_off(self, number: int):
+        if number > len(self.__lamp_list):
+            return print(f"turn_number_of_lamps_off({number}): the number given is higher than the number of available lamps")
+        else:
+            for lamp in range(number):
+                self.__lamp_list[lamp].state = False
+
 class Button:
     def __init__(self, text, rect, color=(255, 255, 255), hover_color=(171, 171, 171), text_color=(0, 0, 0), font_size=32):
         self.text = text

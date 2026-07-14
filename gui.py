@@ -158,6 +158,11 @@ class GameScreen(Screen):
         self.roll_three_lamp = widgets.Lamp((520, 290, 40, 40), border_radius=20, width=2)
         self.roll_dices_button = widgets.Button("Würfeln", (580, 290, 200, 40))
 
+        self.rolls_lamp_line = widgets.LampLine()
+        self.rolls_lamp_line.add_lamp(self.roll_one_lamp)
+        self.rolls_lamp_line.add_lamp(self.roll_two_lamp)
+        self.rolls_lamp_line.add_lamp(self.roll_three_lamp)
+
         self.lower_left_rect = pygame.Rect((0, 350, 400, 350))
         self.three_of_a_kind_label = widgets.Label("Dreierpasch", (100, 365), 26)
         self.three_of_a_kind_arrow = widgets.ArrowRight((200, 365), 30)
