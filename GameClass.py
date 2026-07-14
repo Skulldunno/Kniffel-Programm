@@ -16,7 +16,6 @@ class Game:
 
     def game_over_check(self): # this method checks if the game is over and all scoresheet fields are filled
         if None not in self.scoresheet.__dict__.values():
-            self.score_bonus()
             self.tally_total()
             print("Game Over")
 
@@ -48,26 +47,32 @@ class Game:
 
     def ones(self): # this method is to be used by the button for ones
         self.scoresheet.ones = self.scoresheet.score_upper(self.dice_list, 1)
+        self.score_bonus()
         self.reset_rerolls()
 
     def twos(self): # this method is to be used by the button for twos
         self.scoresheet.twos = self.scoresheet.score_upper(self.dice_list, 2)
+        self.score_bonus()
         self.reset_rerolls()
 
     def threes(self): # this method is to be used by the button for threes
         self.scoresheet.threes = self.scoresheet.score_upper(self.dice_list, 3)
+        self.score_bonus()
         self.reset_rerolls()
     
     def fours(self): # this method is to be used by the button for fours
         self.scoresheet.fours = self.scoresheet.score_upper(self.dice_list, 4)
+        self.score_bonus()
         self.reset_rerolls()
     
     def fives(self): # this method is to be used by the button for fives
         self.scoresheet.fives = self.scoresheet.score_upper(self.dice_list, 5)
+        self.score_bonus()
         self.reset_rerolls()
 
     def sixes(self): # this method is to be used by the button for sixes
         self.scoresheet.sixes = self.scoresheet.score_upper(self.dice_list, 6)
+        self.score_bonus()
         self.reset_rerolls()
     
     def three_of_a_kind(self): # this method is to be used by the button for three of a kind
