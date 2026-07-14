@@ -158,6 +158,12 @@ class GameScreen(Screen):
         self.roll_three_lamp = widgets.Lamp((520, 290, 40, 40), border_radius=20, width=2)
         self.roll_dices_button = widgets.Button("Würfeln", (580, 290, 200, 40))
 
+        self.dice_one = widgets.KlickableDice(2, (430, 145, 32, 32), (725, 99, 32, 32))
+        self.dice_two = widgets.KlickableDice(5, (485, 220, 32, 32), (725, 133, 32, 32))
+        self.dice_three = widgets.KlickableDice(4, (525, 180, 32, 32), (725, 167, 32, 32))
+        self.dice_four = widgets.KlickableDice(6, (615, 230, 32, 32), (725, 201, 32, 32))
+        self.dice_five = widgets.KlickableDice(6, (590, 130, 32, 32), (725, 235, 32, 32))
+
         self.rolls_lamp_line = widgets.LampLine()
         self.rolls_lamp_line.add_lamp(self.roll_one_lamp)
         self.rolls_lamp_line.add_lamp(self.roll_two_lamp)
@@ -211,6 +217,11 @@ class GameScreen(Screen):
 
     def handle_events(self, event):
         self.home_button.handle_event(event)
+        self.dice_one.handle_event(event)
+        self.dice_two.handle_event(event)
+        self.dice_three.handle_event(event)
+        self.dice_four.handle_event(event)
+        self.dice_five.handle_event(event)
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
@@ -254,6 +265,12 @@ class GameScreen(Screen):
         self.roll_two_lamp.draw(surface)
         self.roll_three_lamp.draw(surface)
         self.roll_dices_button.draw(surface)
+
+        self.dice_one.draw(surface)
+        self.dice_two.draw(surface)
+        self.dice_three.draw(surface)
+        self.dice_four.draw(surface)
+        self.dice_five.draw(surface)
 
         pygame.draw.rect(surface, (0, 0, 0), self.lower_left_rect, 1)
         self.three_of_a_kind_label.draw(surface)

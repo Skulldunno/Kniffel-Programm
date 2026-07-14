@@ -181,3 +181,52 @@ class ArrowRight:
         pygame.draw.line(surface, self.color, self.position, (self.position[0]  + self.length, self.position[1]), 2)
         pygame.draw.line(surface, self.color, self.end_position, (self.end_position[0] - 10, self.end_position[1] - 10), 2)
         pygame.draw.line(surface, self.color, self.end_position, (self.end_position[0] - 10, self.end_position[1] + 10), 2)
+
+class KlickableDice:
+    def __init__(self, eyes, roll_rect, alt_rect):
+        self.roll_rect = roll_rect
+        self.alt_rect = alt_rect
+        self.eyes = eyes
+        self.pos_roll = True
+        self.pngs = {
+            1 : "dice_one.png",
+            2 : "dice_two.png",
+            3 : "dice_three.png",
+            4 : "dice_four.png",
+            5 : "dice_five.png",
+            6 : "dice_six.png"
+        }
+        self.png = self.pngs[eyes]
+
+    def set_action(self, action):
+        self.action = action
+
+    def handle_event(self, event):
+        if self.pos_roll:
+            rect = self.roll_rect
+        else:
+            rect = self.alt_rect
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            rect = pygame.Rect(rect)
+            if rect.collidepoint(event.pos):
+                self.switch_rect()
+    
+    def draw(self, surface):
+        if self.pos_roll:
+            rect = self.roll_rect
+        else:
+            rect = self.alt_rect
+
+        png = pygame.image.load(f"assets/{self.png}")
+        png = pygame.transform.scale(png, (32, 32))
+        surface.blit(png, (rect[0], rect[1]))
+
+    def switch_rect(self):
+        if self.pos_roll:
+            self.pos_roll = False
+        else:
+            self.pos_roll = True
+
+    def change_eyes(self, eyes):
+        self.eyes = eyes
