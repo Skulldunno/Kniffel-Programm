@@ -268,7 +268,7 @@ class TextField:
         surface.blit(name_surface, (rect.x + 10, rect.y + 20))
 
 class HighscoreView:
-    def __init__(self, highscores = {"nick" : 263, "alex" : 189, "a" : 327, "b" : 271, "c" : 174, "d" : 125, "e" : 34, "f" : 25, "g" : 101, "h" : 911}):
+    def __init__(self, highscores = [{'Name': 'Nick', 'Score': 3}, {'Name': 'Nick', 'Score': 2}, {'Name': 'Nick', 'Score': 2}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}]):
         self.highscores = highscores
         self.name_labels = []
         self.arrows = []
@@ -276,9 +276,10 @@ class HighscoreView:
 
         y_adder = 0
 
-        highscores = self.sort_list(True)
+        for entrys in self.highscores:
+            name = entrys['Name']
+            score = entrys['Score']
 
-        for name, score in highscores.items():
             self.name_labels.append(Label(name, (300, 195 + y_adder), 60))
             self.arrows.append(ArrowRight((400, 195 + y_adder), 30))
             self.score_labels.append(Label(str(score), (500, 195 + y_adder), 60))
@@ -293,12 +294,3 @@ class HighscoreView:
 
         for label in self.score_labels:
             label.draw(surface)
-
-    def sort_list(self, reverse = False):
-            try:
-                sorted_items = sorted(self.highscores.items(), key=lambda item: item[1], reverse=reverse)
-            except TypeError as e:
-                raise ValueError(f"Dictionary values must be comparable: {e}")
-
-            return dict(sorted_items)
-
