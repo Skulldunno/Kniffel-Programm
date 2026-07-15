@@ -229,7 +229,6 @@ class GameScreen(Screen):
         self.start_new_game_button.set_action(self.restart_game)
         self.home_button = widgets.Button("Home", (405, 712.5, 195, 75), font_size=40)
         self.home_button.set_action(self.quit_game)
-        self.help_button = widgets.Button("Help", (680, 712.5, 80, 75))
     
     def reset_dice(self):
         self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32))
@@ -562,7 +561,6 @@ class GameScreen(Screen):
         pygame.draw.line(surface, (0, 0, 0), (0, 700), (800, 700), 2)
         self.start_new_game_button.draw(surface)
         self.home_button.draw(surface)
-        self.help_button.draw(surface)
 
 class ResultScreen(Screen):
     def __init__(self, manager, game_manager):
