@@ -49,10 +49,7 @@ class ScoreSheet:
     def score_full_house(self, dice_list):
         vals = self._values(dice_list)
         counts = [vals.count(n) for n in range(1, 7)]
-        if (3 in counts and 2 in counts):
-            return 25
-        else:
-            return 0
+        return 25 if (3 in counts and 2 in counts) else 0
 
     def score_small_straight(self, dice_list):
         vals = set(self._values(dice_list))
