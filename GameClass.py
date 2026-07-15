@@ -115,8 +115,9 @@ class Game:
         highscore_daten = self.load_highscore()
         user_score = {
             "Name" : name,
-            "Score" : 2#self.__total
+            "Score" : self.__total
         }
+        if user_score["Score"] == None: return
         for index, score in enumerate(highscore_daten):
             if score["Score"] < user_score["Score"]:
                 highscore_daten.insert(index, user_score)
