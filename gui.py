@@ -100,8 +100,8 @@ class StartScreen(Screen):
         self.start_button.set_action(self.start_game)
 
     def start_game(self):
-        self.manager.change_screen(GameScreen(self.manager, self.game_manager))
         self.game_manager = GameClass.Game()
+        self.manager.change_screen(GameScreen(self.manager, self.game_manager))
 
     def handle_events(self, event):
         self.start_button.handle_event(event)
@@ -125,35 +125,40 @@ class GameScreen(Screen):
         super().__init__(manager, game_manager)
 
         self.title_lable = widgets.Label("Kniffel Gewinnkarte", (400, 37.5), 40)
-
         self.upper_left_rect = pygame.Rect((0, 75, 400, 275))
         self.ones_label = widgets.Label("nur Einser zählen", (100, 95), 26)
         self.arrow_ones = widgets.ArrowRight((200, 95), 30)
         self.ones_button = widgets.Button("", (235, 82.5, 140, 25))
+        self.ones_button.set_action(self.enter_ones)
         self.twos_label = widgets.Label("nur Zweier zählen", (100, 125), 26)
         self.arrow_twos = widgets.ArrowRight((200, 125), 30)
         self.twos_button = widgets.Button("", (235, 112.5, 140, 25))
+        self.twos_button.set_action(self.enter_twos)
         self.threes_label = widgets.Label("nur Dreier zählen", (100, 155), 26)
         self.arrow_threes = widgets.ArrowRight((200, 155), 30)
         self.three_button = widgets.Button("", (235, 142.5, 140, 25))
+        self.three_button.set_action(self.enter_three)
         self.fours_label = widgets.Label("nur Vierer zählen", (100, 185), 26)
         self.arrow_fours = widgets.ArrowRight((200, 185), 30)
         self.fours_button = widgets.Button("", (235, 172.5, 140, 25))
+        self.fours_button.set_action(self.enter_fours)
         self.fives_label = widgets.Label("nur Fünfer zählen", (100, 215), 26)
         self.arrow_fives = widgets.ArrowRight((200, 215), 30)
         self.fives_button = widgets.Button("", (235, 202.5, 140, 25))
+        self.fives_button.set_action(self.enter_fives)
         self.sixes_label = widgets.Label("nur Sechser zählen", (100, 245), 26)
         self.arrow_sixes = widgets.ArrowRight((200, 245), 30)
         self.sixes_button = widgets.Button("", (235, 232.5, 140, 25))
+        self.sixes_button.set_action(self.enter_sixes)
         self.upper_sum_wo_bonus_label = widgets.Label("gesamt", (100, 275), 26)
         self.upper_sum_wo_bonus_arrow = widgets.ArrowRight((200, 275), 30)
-        self.upper_sum_wo_bonus_show = widgets.ShowLabel("", (305, 275, 140, 25), 26)
+        self.upper_sum_wo_bonus_show = widgets.ShowLabel(str(self.game_manager.score_upper_part()), (305, 275, 140, 25))
         self.bonus_label = widgets.Label("Bonus bei 63", (100, 305), 26)
         self.bonus_arrow = widgets.ArrowRight((200, 305), 30)
-        self.bonus_show = widgets.ShowLabel("", (305, 305, 140, 25), 26)
+        self.bonus_show = widgets.ShowLabel(str(self.game_manager.scoresheet.bonus), (305, 305, 140, 25))
         self.upper_sum_label = widgets.Label("gesamt oberer Teil", (100, 335), 26)
         self.upper_sum_arrow = widgets.ArrowRight((200, 335), 30)
-        self.upper_sum_show = widgets.ShowLabel("", (305, 335, 140, 25), 26)
+        self.upper_sum_show = widgets.ShowLabel(str(self.game_manager.score_upper_part() + self.game_manager.scoresheet.bonus), (305, 335, 140, 25))
 
         self.upper_right_rect = pygame.Rect((400, 75, 400, 275))
         self.roll_dice_board = pygame.Rect((420, 95, 265, 175))
@@ -162,12 +167,13 @@ class GameScreen(Screen):
         self.roll_two_lamp = widgets.Lamp((470, 290, 40, 40), border_radius=20, width=2)
         self.roll_three_lamp = widgets.Lamp((520, 290, 40, 40), border_radius=20, width=2)
         self.roll_dices_button = widgets.Button("Würfeln", (580, 290, 200, 40))
+        self.roll_dices_button.set_action(self.roll_all_dice)
 
-        self.dice_one = widgets.KlickableDice(2, (430, 145, 32, 32), (725, 99, 32, 32))
-        self.dice_two = widgets.KlickableDice(5, (485, 220, 32, 32), (725, 133, 32, 32))
-        self.dice_three = widgets.KlickableDice(4, (525, 180, 32, 32), (725, 167, 32, 32))
-        self.dice_four = widgets.KlickableDice(6, (615, 230, 32, 32), (725, 201, 32, 32))
-        self.dice_five = widgets.KlickableDice(6, (590, 130, 32, 32), (725, 235, 32, 32))
+        self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32))
+        self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32))
+        self.dice_three = widgets.KlickableDice(0, (525, 180, 32, 32), (725, 167, 32, 32))
+        self.dice_four = widgets.KlickableDice(0, (615, 230, 32, 32), (725, 201, 32, 32))
+        self.dice_five = widgets.KlickableDice(0, (590, 130, 32, 32), (725, 235, 32, 32))
 
         self.rolls_lamp_line = widgets.LampLine()
         self.rolls_lamp_line.add_lamp(self.roll_one_lamp)
@@ -218,7 +224,96 @@ class GameScreen(Screen):
         self.home_button.set_action(self.quit_game)
         self.help_button = widgets.Button("Help", (680, 712.5, 80, 75))
     
+    def reset_dice(self):
+        self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32))
+        self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32))
+        self.dice_three = widgets.KlickableDice(0, (525, 180, 32, 32), (725, 167, 32, 32))
+        self.dice_four = widgets.KlickableDice(0, (615, 230, 32, 32), (725, 201, 32, 32))
+        self.dice_five = widgets.KlickableDice(0, (590, 130, 32, 32), (725, 235, 32, 32))
+
+    def enter_ones(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.ones()
+        self.ones_button.text = str(self.game_manager.scoresheet.ones)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.ones_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.ones_button.hover_color = (255, 255, 255)
+        self.update_sums()
+
+    def enter_twos(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.twos()
+        self.twos_button.text = str(self.game_manager.scoresheet.twos)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.twos_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.twos_button.hover_color = (255, 255, 255)
+        self.update_sums()
+
+    def enter_three(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.threes()
+        self.three_button.text = str(self.game_manager.scoresheet.threes)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.three_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.three_button.hover_color = (255, 255, 255)
+        self.update_sums()
+
+    def enter_fours(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.fours()
+        self.fours_button.text = str(self.game_manager.scoresheet.fours)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.fours_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.fours_button.hover_color = (255, 255, 255)
+        self.update_sums()
+
+    def enter_fives(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.fives()
+        self.fives_button.text = str(self.game_manager.scoresheet.fives)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.fives_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.fives_button.hover_color = (255, 255, 255)
+        self.update_sums()
+
+    def enter_sixes(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.sixes()
+        self.sixes_button.text = str(self.game_manager.scoresheet.sixes)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.sixes_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.sixes_button.hover_color = (255, 255, 255)
+        self.update_sums()
+
+    def roll_all_dice(self):
+        self.game_manager.roll_all_dice()
+        self.dice_one.set_eyes(self.game_manager.dice_list[0].get_eyes())
+        self.dice_two.set_eyes(self.game_manager.dice_list[1].get_eyes())
+        self.dice_three.set_eyes(self.game_manager.dice_list[2].get_eyes())
+        self.dice_four.set_eyes(self.game_manager.dice_list[3].get_eyes())
+        self.dice_five.set_eyes(self.game_manager.dice_list[4].get_eyes())
+        self.rolls_lamp_line.turn_number_of_lamps_on(3 - self.game_manager.get_rerolls())
+    
     def restart_game(self):
+        self.game_manager = GameClass.Game()
         self.manager.change_screen(GameScreen(self.manager, self.game_manager))
 
     def quit_game(self):
@@ -227,11 +322,22 @@ class GameScreen(Screen):
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)
         self.home_button.handle_event(event)
-        self.dice_one.handle_event(event)
-        self.dice_two.handle_event(event)
-        self.dice_three.handle_event(event)
-        self.dice_four.handle_event(event)
-        self.dice_five.handle_event(event)
+        self.dice_one.handle_event(event, self.game_manager, 0)
+        self.dice_two.handle_event(event, self.game_manager, 1)
+        self.dice_three.handle_event(event, self.game_manager, 2)
+        self.dice_four.handle_event(event, self.game_manager, 3)
+        self.dice_five.handle_event(event, self.game_manager, 4)
+        self.roll_dices_button.handle_event(event)
+        self.ones_button.handle_event(event)
+        self.twos_button.handle_event(event)
+        self.three_button.handle_event(event)
+        self.fours_button.handle_event(event)
+        self.fives_button.handle_event(event)
+        self.sixes_button.handle_event(event)
+
+    def update_sums(self):
+        self.upper_sum_wo_bonus_show.text = str(self.game_manager.score_upper_part())
+        self.upper_sum_show.text = str(self.game_manager.score_upper_part() + self.game_manager.scoresheet.bonus)
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
@@ -331,9 +437,9 @@ class ResultScreen(Screen):
 
         self.title_label = widgets.Label("Kniffel", (400, 37.5), 80)
         self.highscore_show = widgets.ShowLabel("Highscore", (400, 125, 670, 75), 60)
-        self.points_show = widgets.ShowLabel("Punkte", (400, 320, 700, 300), 200)
-        self.name_input = widgets.TextField((175, 480, 450, 100))
-        self.post_highscore_show = widgets.ShowLabel("Post Highscore", (400, 625, 300, 75), 60)
+        self.highscore_value_show = widgets.ShowLabel(str(self.game_manager.load_highscore()[0]["Score"]), (400, 215, 670, 90), 60)
+        self.points_show = widgets.ShowLabel("Punkte", (400, 420, 700, 300), 200)
+        self.name_input = widgets.TextField((175, 580, 450, 100))
         self.start_new_game_button = widgets.Button("Start New Game", (100, 700, 200, 50))
         self.start_new_game_button.set_action(self.start_new_game)
         self.home_button = widgets.Button("Home", (500, 700, 200, 50))
@@ -356,8 +462,8 @@ class ResultScreen(Screen):
         pygame.draw.line(surface, (0, 0, 0), (0, 75), (800, 75), 2)
         self.title_label.draw(surface)
         self.highscore_show.draw(surface)
+        self.highscore_value_show.draw(surface)
         self.points_show.draw(surface)
         self.name_input.draw(surface)
-        self.post_highscore_show.draw(surface)
         self.start_new_game_button.draw(surface)
         self.home_button.draw(surface)

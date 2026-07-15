@@ -17,3 +17,6 @@ class Dice:
             self.__locked = True
         else:
             self.__locked = False
+
+    def set_locked_false(self):
+        self.__locked = False

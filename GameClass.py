@@ -22,9 +22,16 @@ class Game:
 
     def reset_rerolls(self): # This method resets the rerolls. should be triggered every round
         self.__rerolls_left = 3
+
+    def get_rerolls(self):
+        return self.__rerolls_left
+    
+    def unlock_all_dice(self):
+        for die in self.dice_list:
+            die.set_locked_false()
         
     def roll_all_dice(self): # This method rolls every die or the locked die will not get rolled. can only be rolled a max of 3 times
-        if self.__rerolls_left < 0:
+        if self.__rerolls_left > 0:
             for die in self.dice_list:
                 die.roll()
             self.__rerolls_left -= 1
@@ -34,7 +41,9 @@ class Game:
             print(die.get_eyes())
 
     def score_upper_part(self):
-        upper_part = [self.scoresheet.ones + self.scoresheet.twos + self.scoresheet.threes + self.scoresheet.fours + self.scoresheet.fives + self.scoresheet.sixes]
+        upper_part = [self.scoresheet.ones, self.scoresheet.twos, self.scoresheet.threes, self.scoresheet.fours, self.scoresheet.fives, self.scoresheet.sixes]
+        total = 0
+        
         for number in upper_part:
             if type(number) == int:
                 total += number

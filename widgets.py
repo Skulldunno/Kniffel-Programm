@@ -36,6 +36,11 @@ class ShowLabel:
         self.rect = self.image.get_rect(center=(rect[0], rect[1]))
 
     def draw(self, surface):
+        self.image = self.font.render(
+            self.text,
+            True,
+            self.color
+        )
         pygame.draw.rect(surface, self.color, self.label_rect, 2, 20)
         surface.blit(self.image, self.rect)      
 
@@ -189,6 +194,7 @@ class KlickableDice:
         self.eyes = eyes
         self.pos_roll = True
         self.pngs = {
+            0 : "empty.png",
             1 : "dice_one.png",
             2 : "dice_two.png",
             3 : "dice_three.png",
@@ -201,7 +207,7 @@ class KlickableDice:
     def set_action(self, action):
         self.action = action
 
-    def handle_event(self, event):
+    def handle_event(self, event, game_manager, index):
         if self.pos_roll:
             rect = self.roll_rect
         else:
@@ -209,8 +215,10 @@ class KlickableDice:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             rect = pygame.Rect(rect)
-            if rect.collidepoint(event.pos):
+            if rect.collidepoint(event.pos) and self.eyes != 0:
                 self.switch_rect()
+                game_manager.dice_list[index].lock_unlock()
+
     
     def draw(self, surface):
         if self.pos_roll:
@@ -230,7 +238,8 @@ class KlickableDice:
 
     def set_eyes(self, eyes):
         self.eyes = eyes
-
+        self.png = self.pngs[eyes]
+        
 class TextField:
     def __init__(self, rect):
         self.active_input = False
@@ -261,11 +270,11 @@ class TextField:
         pygame.draw.rect(surface, (255, 255, 255), rect)
         pygame.draw.rect(surface, (0, 0, 0), rect, 2, 20)
         if self.active_input:
-            Label(self.text, (400, 530), 80).draw(surface)
+            Label(self.text, (400, 630), 80).draw(surface)
         elif self.text != "":
-            Label(self.text, (400, 530), 80).draw(surface)
+            Label(self.text, (400, 630), 80).draw(surface)
         else:
-            Label(self.placeholder, (400, 530), 80).draw(surface)
+            Label(self.placeholder, (400, 630), 80).draw(surface)
 
 class HighscoreView:
     def __init__(self, highscores = [{'Name': 'Nick', 'Score': 3}, {'Name': 'Nick', 'Score': 2}, {'Name': 'Nick', 'Score': 2}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}]):

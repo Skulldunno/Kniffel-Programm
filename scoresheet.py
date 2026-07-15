@@ -7,7 +7,7 @@ class ScoreSheet:
         self.fours = None
         self.fives = None
         self.sixes = None
-        self.bonus = None
+        self.bonus = 0
 
         # Unten
         self.three_of_a_kind = None
