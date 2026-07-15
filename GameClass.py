@@ -1,5 +1,6 @@
 import DiceClass as D
 import scoresheet as scoshe
+import json
 
 class Game:
     def __init__(self):
@@ -110,7 +111,28 @@ class Game:
     def tally_total(self):
         self.__total = sum(self.scoresheet.__dict__.values())
     
+    def save_highscore(self, name):
+        highscore_daten = self.load_highscore()
+        user_score = {
+            "Name" : name,
+            "Score" : 2#self.__total
+        }
+        for index, score in enumerate(highscore_daten):
+            if score["Score"] < user_score["Score"]:
+                highscore_daten.insert(index, user_score)
+                if len(highscore_daten) == 11:
+                    highscore_daten.pop()
+                break
+
+        with open("highscore.json", "w", encoding="utf-8") as file:
+            json.dump(highscore_daten, file, indent=4, ensure_ascii=False)
+
+    def load_highscore(self):
+        with open("highscore.json", "r", encoding="utf-8") as file:
+            highscore_daten=json.load(file)
+        return highscore_daten
+    
 if __name__ == "__main__":
     game = Game()
     game.game_over_check()
-    game.tally_total()
+    game.save_highscore("Nick")
