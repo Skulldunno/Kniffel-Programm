@@ -1,5 +1,6 @@
 import pygame
 import widgets
+import GameClass
 
 
 class Gui:
@@ -11,7 +12,9 @@ class Gui:
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Kniffel Programm")
 
-        self.current_screen = StartScreen(self)
+        self.game_manager = GameClass.Game()
+
+        self.current_screen = StartScreen(self, self.game_manager)
 
         self.iconchanger = IconChanger()
 
@@ -68,8 +71,9 @@ class IconChanger:
 
 
 class Screen:
-    def __init__(self, manager):
+    def __init__(self, manager, game_manager):
         self.manager = manager
+        self.game_manager = game_manager
 
     def handle_events(self, event):
         pass
@@ -81,22 +85,23 @@ class Screen:
         pass
 
 class StartScreen(Screen):
-    def __init__(self, manager):
-        super().__init__(manager)
+    def __init__(self, manager, game_manager):
+        super().__init__(manager, game_manager)
 
         self.title_lable = widgets.Label("KNIFFEL", (400, 37.5), 80)
 
         self.highscore_rect = pygame.Rect((50, 85, 700, 75))
-        self.highscore_label = widgets.Label("HI-SCORE", (400, 122.5), 60)
+        self.highscore_label = widgets.Label("HIGHSCORE", (400, 122.5), 60)
 
         self.highscores_rect = pygame.Rect((200, 170, 400, 500))
-        self.highscores_view = widgets.HighscoreView()
+        self.highscores_view = widgets.HighscoreView(game_manager.load_highscore())
 
         self.start_button = widgets.Button("Start", (225, 700, 350, 60))
         self.start_button.set_action(self.start_game)
 
     def start_game(self):
-        self.manager.change_screen(GameScreen(self.manager))
+        self.manager.change_screen(GameScreen(self.manager, self.game_manager))
+        self.game_manager = GameClass.Game()
 
     def handle_events(self, event):
         self.start_button.handle_event(event)
@@ -116,8 +121,8 @@ class StartScreen(Screen):
         self.start_button.draw(surface)
 
 class GameScreen(Screen):
-    def __init__(self, manager):
-        super().__init__(manager)
+    def __init__(self, manager, game_manager):
+        super().__init__(manager, game_manager)
 
         self.title_lable = widgets.Label("Kniffel Gewinnkarte", (400, 37.5), 40)
 
@@ -214,10 +219,10 @@ class GameScreen(Screen):
         self.help_button = widgets.Button("Help", (680, 712.5, 80, 75))
     
     def restart_game(self):
-        self.manager.change_screen(GameScreen(self.manager))
+        self.manager.change_screen(GameScreen(self.manager, self.game_manager))
 
     def quit_game(self):
-        self.manager.change_screen(StartScreen(self.manager))
+        self.manager.change_screen(StartScreen(self.manager, self.game_manager))
 
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)
@@ -321,24 +326,24 @@ class GameScreen(Screen):
         self.help_button.draw(surface)
 
 class ResultScreen(Screen):
-    def __init__(self, manager):
-        super().__init__(manager)
+    def __init__(self, manager, game_manager):
+        super().__init__(manager, game_manager)
 
         self.title_label = widgets.Label("Kniffel", (400, 37.5), 80)
         self.highscore_show = widgets.ShowLabel("Highscore", (400, 125, 670, 75), 60)
         self.points_show = widgets.ShowLabel("Punkte", (400, 320, 700, 300), 200)
         self.name_input = widgets.TextField((175, 480, 450, 100))
-        self.post_highscore_show = widgets.ShowLabel("Post HI-Score", (400, 625, 300, 75), 60)
+        self.post_highscore_show = widgets.ShowLabel("Post Highscore", (400, 625, 300, 75), 60)
         self.start_new_game_button = widgets.Button("Start New Game", (100, 700, 200, 50))
         self.start_new_game_button.set_action(self.start_new_game)
         self.home_button = widgets.Button("Home", (500, 700, 200, 50))
         self.home_button.set_action(self.go_home)
 
     def start_new_game(self):
-        self.manager.change_screen(GameScreen(self.manager))
+        self.manager.change_screen(GameScreen(self.manager, self.game_manager))
 
     def go_home(self):
-        self.manager.change_screen(StartScreen(self.manager))
+        self.manager.change_screen(StartScreen(self.manager, self.game_manager))
 
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)
