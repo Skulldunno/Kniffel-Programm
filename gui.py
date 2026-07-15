@@ -338,6 +338,7 @@ class GameScreen(Screen):
     def update_sums(self):
         self.upper_sum_wo_bonus_show.text = str(self.game_manager.score_upper_part())
         self.upper_sum_show.text = str(self.game_manager.score_upper_part() + self.game_manager.scoresheet.bonus)
+        self.bonus_show = str(self.game_manager.scoresheet.bonus)
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
