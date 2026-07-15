@@ -11,7 +11,7 @@ class Gui:
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Kniffel Programm")
 
-        self.current_screen = ResultScreen(self)
+        self.current_screen = StartScreen(self)
 
         self.iconchanger = IconChanger()
 
@@ -31,8 +31,8 @@ class Gui:
             self.current_screen.update()
             self.current_screen.draw(self.screen)
 
-            self.iconchanger.increment_frame_counter()
-            pygame.display.set_icon(pygame.image.load(f"./assets/{self.iconchanger.icon_list[self.iconchanger.icon_index]}"))
+            #self.iconchanger.increment_frame_counter()
+            #pygame.display.set_icon(pygame.image.load(f"./assets/{self.iconchanger.icon_list[self.iconchanger.icon_index]}"))
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -90,7 +90,7 @@ class StartScreen(Screen):
         self.highscore_label = widgets.Label("HI-SCORE", (400, 122.5), 60)
 
         self.highscores_rect = pygame.Rect((200, 170, 400, 500))
-        self.highscores_label = widgets.Label("NAME ---> XXX", (400, 195), 40)
+        self.highscores_view = widgets.HighscoreView()
 
         self.start_button = widgets.Button("Start", (225, 700, 350, 60))
         self.start_button.set_action(self.start_game)
@@ -111,7 +111,7 @@ class StartScreen(Screen):
         self.highscore_label.draw(surface)
 
         pygame.draw.rect(surface, (0, 0, 0), self.highscores_rect, 2, 20)
-        self.highscores_label.draw(surface)
+        self.highscores_view.draw(surface)
 
         self.start_button.draw(surface)
 
@@ -208,14 +208,19 @@ class GameScreen(Screen):
         self.error_messages_rect = pygame.Rect((420, 370, 360, 310))
 
         self.start_new_game_button = widgets.Button("Start new Game", (200, 712.5, 195, 75))
+        self.start_new_game_button.set_action(self.restart_game)
         self.home_button = widgets.Button("Home", (405, 712.5, 195, 75), font_size=40)
         self.home_button.set_action(self.quit_game)
         self.help_button = widgets.Button("Help", (680, 712.5, 80, 75))
+    
+    def restart_game(self):
+        self.manager.change_screen(GameScreen(self.manager))
 
     def quit_game(self):
         self.manager.change_screen(StartScreen(self.manager))
 
     def handle_events(self, event):
+        self.start_new_game_button.handle_event(event)
         self.home_button.handle_event(event)
         self.dice_one.handle_event(event)
         self.dice_two.handle_event(event)
