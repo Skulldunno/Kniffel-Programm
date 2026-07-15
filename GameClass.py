@@ -49,6 +49,15 @@ class Game:
                 total += number
         return total
 
+    def score_lower_part(self):
+        lower_part = [self.scoresheet.three_of_a_kind, self.scoresheet.four_of_a_kind, self.scoresheet.full_house, self.scoresheet.small_straight, self.scoresheet.large_straight, self.scoresheet.chance, self.scoresheet.kniffel]
+        total = 0
+        
+        for number in lower_part:
+            if type(number) == int:
+                total += number
+        return total
+
     def score_bonus(self):
         if self.score_upper_part() >= 63 :
             self.scoresheet.bonus = 35
