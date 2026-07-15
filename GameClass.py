@@ -19,6 +19,7 @@ class Game:
         if None not in self.scoresheet.__dict__.values():
             self.tally_total()
             print("Game Over")
+            return True
 
     def reset_rerolls(self): # This method resets the rerolls. should be triggered every round
         self.__rerolls_left = 3
@@ -128,6 +129,9 @@ class Game:
     
     def tally_total(self):
         self.__total = sum(self.scoresheet.__dict__.values())
+
+    def get_tally_total(self):
+        return self.__total
     
     def save_highscore(self, name):
         highscore_daten = self.load_highscore()

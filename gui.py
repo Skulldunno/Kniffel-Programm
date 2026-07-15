@@ -217,7 +217,7 @@ class GameScreen(Screen):
         self.upper_sum_low_show = widgets.ShowLabel(str(self.game_manager.score_upper_part() + self.game_manager.scoresheet.bonus), (305, 605, 140, 25))
         self.extra_kniffel_label = widgets.Label("Punkte Extra Kniffel", (100, 635), 26)
         self.extra_kniffel_arrow = widgets.ArrowRight((200, 635), 30)
-        self.extra_kniffel_show = widgets.ShowLabel("", (305, 635, 140, 25))
+        self.extra_kniffel_show = widgets.ShowLabel(str(self.game_manager.scoresheet.kniffel_bonus), (305, 635, 140, 25))
         self.end_sum_label = widgets.Label("Endsumme", (100, 665), 26)
         self.end_sum_arrow = widgets.ArrowRight((200, 665), 30)
         self.end_sum_show = widgets.ShowLabel("", (305, 665, 140, 25))
@@ -249,6 +249,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.ones_button.hover_color = (255, 255, 255)
         self.update_sums_upper()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_twos(self):
         if self.game_manager.get_rerolls() == 3:
@@ -261,6 +263,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.twos_button.hover_color = (255, 255, 255)
         self.update_sums_upper()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_three(self):
         if self.game_manager.get_rerolls() == 3:
@@ -273,6 +277,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.three_button.hover_color = (255, 255, 255)
         self.update_sums_upper()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_fours(self):
         if self.game_manager.get_rerolls() == 3:
@@ -285,6 +291,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.fours_button.hover_color = (255, 255, 255)
         self.update_sums_upper()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_fives(self):
         if self.game_manager.get_rerolls() == 3:
@@ -297,6 +305,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.fives_button.hover_color = (255, 255, 255)
         self.update_sums_upper()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_sixes(self):
         if self.game_manager.get_rerolls() == 3:
@@ -309,6 +319,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.sixes_button.hover_color = (255, 255, 255)
         self.update_sums_upper()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_three_of_a_kind(self):
         if self.game_manager.get_rerolls() == 3:
@@ -321,6 +333,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.three_of_a_kind_button.hover_color = (255, 255, 255)
         self.update_sums_lower()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_four_of_a_kind(self):
         if self.game_manager.get_rerolls() == 3:
@@ -333,6 +347,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.four_of_a_kind_button.hover_color = (255, 255, 255)
         self.update_sums_lower()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_full_house(self):
         if self.game_manager.get_rerolls() == 3:
@@ -345,6 +361,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.full_house_button.hover_color = (255, 255, 255)
         self.update_sums_lower()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_small_road(self):
         if self.game_manager.get_rerolls() == 3:
@@ -357,6 +375,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.small_road_button.hover_color = (255, 255, 255)
         self.update_sums_lower()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_big_road(self):
         if self.game_manager.get_rerolls() == 3:
@@ -369,6 +389,8 @@ class GameScreen(Screen):
         self.game_manager.unlock_all_dice()
         self.big_road_button.hover_color = (255, 255, 255)
         self.update_sums_lower()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_kniffel(self):
         if self.game_manager.get_rerolls() == 3:
@@ -380,6 +402,9 @@ class GameScreen(Screen):
         self.kniffel_button.set_action(None)
         self.game_manager.unlock_all_dice()
         self.kniffel_button.hover_color = (255, 255, 255)
+        self.update_sums_lower()
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def enter_chance(self):
         if self.game_manager.get_rerolls() == 3:
@@ -391,6 +416,12 @@ class GameScreen(Screen):
         self.chance_button.set_action(None)
         self.game_manager.unlock_all_dice()
         self.chance_button.hover_color = (255, 255, 255)
+        self.update_sums_lower()
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def show_results(self):
+        self.manager.change_screen(ResultScreen(self.manager, self.game_manager))
 
     def roll_all_dice(self):
         self.game_manager.roll_all_dice()
@@ -540,7 +571,7 @@ class ResultScreen(Screen):
         self.title_label = widgets.Label("Kniffel", (400, 37.5), 80)
         self.highscore_show = widgets.ShowLabel("Highscore", (400, 125, 670, 75), 60)
         self.highscore_value_show = widgets.ShowLabel(str(self.game_manager.load_highscore()[0]["Score"]), (400, 215, 670, 90), 60)
-        self.points_show = widgets.ShowLabel("Punkte", (400, 420, 700, 300), 200)
+        self.points_show = widgets.ShowLabel(str(self.game_manager.get_tally_total()), (400, 420, 700, 300), 200)
         self.name_input = widgets.TextField((175, 580, 450, 100))
         self.start_new_game_button = widgets.Button("Start New Game", (100, 700, 200, 50))
         self.start_new_game_button.set_action(self.start_new_game)
@@ -548,6 +579,7 @@ class ResultScreen(Screen):
         self.home_button.set_action(self.go_home)
 
     def start_new_game(self):
+        self.game_manager = GameClass.Game()
         self.manager.change_screen(GameScreen(self.manager, self.game_manager))
 
     def go_home(self):
