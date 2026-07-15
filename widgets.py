@@ -244,7 +244,8 @@ class TextField:
             if event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]
             else:
-                self.text += event.unicode
+                if len(self.text) < 5:
+                    self.text += event.unicode
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             rect = pygame.Rect(self.rect)
@@ -260,12 +261,11 @@ class TextField:
         pygame.draw.rect(surface, (255, 255, 255), rect)
         pygame.draw.rect(surface, (0, 0, 0), rect, 2, 20)
         if self.active_input:
-            name_surface = self.text_font.render(self.text, True, (0, 0, 0))
+            Label(self.text, (400, 530), 80).draw(surface)
         elif self.text != "":
-            name_surface = self.text_font.render(self.text, True, (0, 0, 0))
+            Label(self.text, (400, 530), 80).draw(surface)
         else:
-            name_surface = self.text_font.render(self.placeholder, True, (0, 0, 0))
-        surface.blit(name_surface, (rect.x + 10, rect.y + 20))
+            Label(self.placeholder, (400, 530), 80).draw(surface)
 
 class HighscoreView:
     def __init__(self, highscores = [{'Name': 'Nick', 'Score': 3}, {'Name': 'Nick', 'Score': 2}, {'Name': 'Nick', 'Score': 2}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}]):
