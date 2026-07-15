@@ -16,7 +16,7 @@ class ScoreSheet:
         self.small_straight = None
         self.large_straight = None
         self.kniffel = None
-        self.kniffel_bonus = None
+        self.kniffel_bonus = 0
         self.chance = None
 
         self.kniffel_count = 0
@@ -82,8 +82,6 @@ class ScoreSheet:
                 return 50
             
             else:
-                if self.kniffel_bonus is None:
-                    self.kniffel_bonus = 0
                 self.kniffel_bonus += 50
                 return 50
 
