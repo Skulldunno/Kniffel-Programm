@@ -196,19 +196,19 @@ class GameScreen(Screen):
         self.small_road_label = widgets.Label("Kleine Straße", (100, 455), 26 )
         self.small_road_arrow = widgets.ArrowRight((200, 455), 30)
         self.small_road_button = widgets.Button("", (235, 442.5, 140, 25))
-        #self.small_road_button.set_action(self.enter_small_road)
+        self.small_road_button.set_action(self.enter_small_road)
         self.big_road_label = widgets.Label("Große Straße", (100, 485), 26)
         self.big_road_arrow = widgets.ArrowRight((200, 485), 30)
         self.big_road_button = widgets.Button("", (235, 472.5, 140, 25))
-        #self.big_road_button.set_action(self.enter_big_road)
+        self.big_road_button.set_action(self.enter_big_road)
         self.kniffel_label = widgets.Label("Kniffel", (100, 515), 26)
         self.kniffel_arrow = widgets.ArrowRight((200, 515), 30)
         self.kniffel_button = widgets.Button("", (235, 502.5, 140, 25))
-        #self.kniffel_button.set_action(self.enter_kniffel)
+        self.kniffel_button.set_action(self.enter_kniffel)
         self.chance_label = widgets.Label("Chance", (100, 545), 26)
         self.chance_arrow = widgets.ArrowRight((200, 545), 30)
         self.chance_button = widgets.Button("",(235, 532.5, 140, 25))
-        #self.chance_button.set_action(self.enter_chance)
+        self.chance_button.set_action(self.enter_chance)
         self.lower_sum_label = widgets.Label("gesamt unterer Teil", (100, 575), 26)
         self.lower_sum_arrow = widgets.ArrowRight((200, 575), 30)
         self.lower_sum_show = widgets.ShowLabel(str(self.game_manager.score_lower_part()), (305, 575, 140, 25))
@@ -346,7 +346,51 @@ class GameScreen(Screen):
         self.full_house_button.hover_color = (255, 255, 255)
         self.update_sums_lower()
 
-    
+    def enter_small_road(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.small_straight()
+        self.small_road_button.text = str(self.game_manager.scoresheet.small_straight)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.small_road_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.small_road_button.hover_color = (255, 255, 255)
+        self.update_sums_lower()
+
+    def enter_big_road(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.large_straight()
+        self.big_road_button.text = str(self.game_manager.scoresheet.large_straight)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.big_road_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.big_road_button.hover_color = (255, 255, 255)
+        self.update_sums_lower()
+
+    def enter_kniffel(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.kniffel()
+        self.kniffel_button.text = str(self.game_manager.scoresheet.kniffel)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.kniffel_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.kniffel_button.hover_color = (255, 255, 255)
+
+    def enter_chance(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.chance()
+        self.chance_button.text = str(self.game_manager.scoresheet.chance)
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.chance_button.set_action(None)
+        self.game_manager.unlock_all_dice()
+        self.chance_button.hover_color = (255, 255, 255)
 
     def roll_all_dice(self):
         self.game_manager.roll_all_dice()
