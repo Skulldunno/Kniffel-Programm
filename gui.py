@@ -11,7 +11,7 @@ class Gui:
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Kniffel Programm")
 
-        self.current_screen = StartScreen(self)
+        self.current_screen = ResultScreen(self)
 
         self.iconchanger = IconChanger()
 
@@ -322,7 +322,7 @@ class ResultScreen(Screen):
         self.title_label = widgets.Label("Kniffel", (400, 37.5), 80)
         self.highscore_show = widgets.ShowLabel("Highscore", (400, 125, 670, 75), 60)
         self.points_show = widgets.ShowLabel("Punkte", (400, 320, 700, 300), 200)
-        self.name_show = widgets.ShowLabel("Name", (400, 530, 300, 100), 80)
+        self.name_input = widgets.TextField((175, 480, 450, 100))
         self.post_highscore_show = widgets.ShowLabel("Post HI-Score", (400, 625, 300, 75), 60)
         self.start_new_game_button = widgets.Button("Start New Game", (100, 700, 200, 50))
         self.start_new_game_button.set_action(self.start_new_game)
@@ -338,6 +338,7 @@ class ResultScreen(Screen):
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)
         self.home_button.handle_event(event)
+        self.name_input.handle_event(event)
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
@@ -346,7 +347,7 @@ class ResultScreen(Screen):
         self.title_label.draw(surface)
         self.highscore_show.draw(surface)
         self.points_show.draw(surface)
-        self.name_show.draw(surface)
+        self.name_input.draw(surface)
         self.post_highscore_show.draw(surface)
         self.start_new_game_button.draw(surface)
         self.home_button.draw(surface)

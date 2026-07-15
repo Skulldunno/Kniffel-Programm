@@ -228,5 +228,42 @@ class KlickableDice:
         else:
             self.pos_roll = True
 
-    def change_eyes(self, eyes):
+    def set_eyes(self, eyes):
         self.eyes = eyes
+
+class TextField:
+    def __init__(self, rect):
+        self.active_input = False
+        self.placeholder = "Name eingeben"
+        self.text = ""
+        self.rect = rect
+        self.text_font = pygame.font.SysFont(None, 80)
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN and self.active_input:
+            if event.key == pygame.K_BACKSPACE:
+                self.text = self.text[:-1]
+            else:
+                self.text += event.unicode
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            rect = pygame.Rect(self.rect)
+            if rect.collidepoint(event.pos):
+                if self.active_input:
+                    self.active_input = False
+                else:
+                    self.active_input = True
+
+    def draw(self, surface):
+        rect = pygame.Rect(self.rect)
+
+        pygame.draw.rect(surface, (255, 255, 255), rect)
+        pygame.draw.rect(surface, (0, 0, 0), rect, 2, 20)
+        if self.active_input:
+            name_surface = self.text_font.render(self.text, True, (0, 0, 0))
+        elif self.text != "":
+            name_surface = self.text_font.render(self.text, True, (0, 0, 0))
+        else:
+            name_surface = self.text_font.render(self.placeholder, True, (0, 0, 0))
+        surface.blit(name_surface, (rect.x + 10, rect.y + 20))
+
