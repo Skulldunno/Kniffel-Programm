@@ -66,23 +66,20 @@ class ScoreSheet:
 
     def score_kniffel(self, dice_list):
         vals = self._values(dice_list)
-        return 50 if len(set(vals)) == 1 else 0
+        if len(set(vals)) == 1:
+            self.kniffel_count += 1
+            return 50
+        else:
+            return 0
 
     def score_chance(self, dice_list):
         return sum(self._values(dice_list))
 
     def check_kniffel(self, dice_list):
         values = self._values(dice_list)
-
         if len(set(values)) == 1:
-            self.kniffel_count += 1
-
-            if self.kniffel_count == 1:
-                self.kniffel = 50
-                return 50
-            
-            else:
+            if self.kniffel_count >= 1:
+                self.kniffel_count += 1
                 self.kniffel_bonus += 50
-                return 50
-
-        return 0
+            return True
+        return False
