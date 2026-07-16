@@ -611,11 +611,16 @@ class ResultScreen(Screen):
         self.home_button.set_action(self.go_home)
 
     def start_new_game(self):
+        self.save_highscore()
         self.game_manager = GameClass.Game()
         self.manager.change_screen(GameScreen(self.manager, self.game_manager))
 
     def go_home(self):
+        self.save_highscore()
         self.manager.change_screen(StartScreen(self.manager, self.game_manager))
+
+    def save_highscore(self):
+        self.game_manager.save_highscore(self.name_input.text)
 
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)
