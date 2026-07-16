@@ -89,3 +89,17 @@ class RomanSkinset(SkinSet):
             5 : "roman_V.png",
             6 : "roman_VI.png"
         }
+
+class AntiSkinset(SkinSet):
+    def __init__(self):
+        super().__init__()
+
+        self.pngs = {
+            0 : "empty.png",
+            1 : "anti_one.png",
+            2 : "anti_two.png",
+            3 : "anti_three.png",
+            4 : "anti_four.png",
+            5 : "anti_five.png",
+            6 : "anti_six.png"
+        }

@@ -173,11 +173,13 @@ class GameScreen(Screen):
         self.std_skinset = skinsets.StandartSkinset()
         self.blue_skinset = skinsets.BlueSkinset()
         self.roman_skinset = skinsets.RomanSkinset()
+        self.anti_skinset = skinsets.AntiSkinset()
 
         self.skinchanger = skinsets.SkinChanger()
         self.skinchanger.add_skinset("black", self.std_skinset)
         self.skinchanger.add_skinset("blue", self.blue_skinset)
         self.skinchanger.add_skinset("roman", self.roman_skinset)
+        self.skinchanger.add_skinset("anti", self.anti_skinset)
 
         self.skinchanger.set_current_skinset("black")
 
@@ -254,6 +256,8 @@ class GameScreen(Screen):
         self.blue_skinset.skinset_button.set_action(self.change_skinset_to_blue)
         self.roman_skinset.skinset_button = skinsets.SkinsetButton((514, 540, 32, 32), "roman_VI.png")
         self.roman_skinset.skinset_button.set_action(self.change_skinset_to_roman)
+        self.anti_skinset.skinset_button = skinsets.SkinsetButton((556, 540, 32, 32), "anti_six.png")
+        self.anti_skinset.skinset_button.set_action(self.change_skinset_to_anti)
 
         self.start_new_game_button = widgets.Button("Start new Game", (200, 712.5, 195, 75))
         self.start_new_game_button.set_action(self.restart_game)
@@ -270,6 +274,10 @@ class GameScreen(Screen):
 
     def change_skinset_to_roman(self):
         self.skinchanger.set_current_skinset("roman")
+        self.skinchanger.update_skinset()
+
+    def change_skinset_to_anti(self):
+        self.skinchanger.set_current_skinset("anti")
         self.skinchanger.update_skinset()
     
     def reset_dice(self):
@@ -561,6 +569,7 @@ class GameScreen(Screen):
         self.std_skinset.skinset_button.handle_event(event)
         self.blue_skinset.skinset_button.handle_event(event)
         self.roman_skinset.skinset_button.handle_event(event)
+        self.anti_skinset.skinset_button.handle_event(event)
 
     def update_sums_upper(self):
         self.upper_sum_wo_bonus_show.text = str(self.game_manager.score_upper_part())
@@ -669,6 +678,7 @@ class GameScreen(Screen):
         self.std_skinset.skinset_button.draw(surface)
         self.blue_skinset.skinset_button.draw(surface)
         self.roman_skinset.skinset_button.draw(surface)
+        self.anti_skinset.skinset_button.draw(surface)
 
         pygame.draw.line(surface, (0, 0, 0), (0, 700), (800, 700), 2)
         self.start_new_game_button.draw(surface)
