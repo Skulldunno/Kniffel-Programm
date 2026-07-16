@@ -18,7 +18,6 @@ class Game:
     def game_over_check(self): # this method checks if the game is over and all scoresheet fields are filled
         if None not in self.scoresheet.__dict__.values():
             self.tally_total()
-            print("Game Over")
             return True
 
     def reset_rerolls(self): # This method resets the rerolls. should be triggered every round
