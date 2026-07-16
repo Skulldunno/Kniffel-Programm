@@ -33,7 +33,7 @@ class SkinsetButton:
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            rect = pygame.Rect(rect)
+            rect = pygame.Rect(self.rect)
             if rect.collidepoint(event.pos):
                 if self.action:
                     self.action()
@@ -74,4 +74,18 @@ class BlueSkinset(SkinSet):
             4 : "dice_four_blue.png",
             5 : "dice_five_blue.png",
             6 : "dice_six_blue.png"
+        }
+
+class RomanSkinset(SkinSet):
+    def __init__(self):
+        super().__init__()
+
+        self.pngs = {
+            0 : "empty.png",
+            1 : "roman_I.png",
+            2 : "roman_II.png",
+            3 : "roman_III.png",
+            4 : "roman_IV.png",
+            5 : "roman_V.png",
+            6 : "roman_VI.png"
         }

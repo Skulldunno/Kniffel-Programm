@@ -188,20 +188,12 @@ class ArrowRight:
         pygame.draw.line(surface, self.color, self.end_position, (self.end_position[0] - 10, self.end_position[1] + 10), 2)
 
 class KlickableDice:
-    def __init__(self, eyes, roll_rect, alt_rect):
+    def __init__(self, eyes, roll_rect, alt_rect, pngs):
         self.roll_rect = roll_rect
         self.alt_rect = alt_rect
         self.eyes = eyes
         self.pos_roll = True
-        self.pngs = {
-            0 : "empty.png",
-            1 : "dice_one.png",
-            2 : "dice_two.png",
-            3 : "dice_three.png",
-            4 : "dice_four.png",
-            5 : "dice_five.png",
-            6 : "dice_six.png"
-        }
+        self.pngs = pngs
         self.png = self.pngs[eyes]
 
     def set_action(self, action):
@@ -226,6 +218,8 @@ class KlickableDice:
         else:
             rect = self.alt_rect
 
+        self.png = self.pngs[self.eyes]
+        
         png = pygame.image.load(f"assets/{self.png}")
         png = pygame.transform.scale(png, (32, 32))
         surface.blit(png, (rect[0], rect[1]))

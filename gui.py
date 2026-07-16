@@ -1,6 +1,7 @@
 import pygame
 import widgets
 import GameClass
+import skinsets
 
 
 class Gui:
@@ -169,11 +170,28 @@ class GameScreen(Screen):
         self.roll_dices_button = widgets.Button("Würfeln", (580, 290, 200, 40))
         self.roll_dices_button.set_action(self.roll_all_dice)
 
-        self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32))
-        self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32))
-        self.dice_three = widgets.KlickableDice(0, (525, 180, 32, 32), (725, 167, 32, 32))
-        self.dice_four = widgets.KlickableDice(0, (615, 230, 32, 32), (725, 201, 32, 32))
-        self.dice_five = widgets.KlickableDice(0, (590, 130, 32, 32), (725, 235, 32, 32))
+        self.std_skinset = skinsets.StandartSkinset()
+        self.blue_skinset = skinsets.BlueSkinset()
+        self.roman_skinset = skinsets.RomanSkinset()
+
+        self.skinchanger = skinsets.SkinChanger()
+        self.skinchanger.add_skinset("black", self.std_skinset)
+        self.skinchanger.add_skinset("blue", self.blue_skinset)
+        self.skinchanger.add_skinset("roman", self.roman_skinset)
+
+        self.skinchanger.set_current_skinset("black")
+
+        self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_three = widgets.KlickableDice(0, (525, 180, 32, 32), (725, 167, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_four = widgets.KlickableDice(0, (615, 230, 32, 32), (725, 201, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_five = widgets.KlickableDice(0, (590, 130, 32, 32), (725, 235, 32, 32), self.skinchanger.get_current_skinset())
+
+        self.skinchanger.add_dice(self.dice_one)
+        self.skinchanger.add_dice(self.dice_two)
+        self.skinchanger.add_dice(self.dice_three)
+        self.skinchanger.add_dice(self.dice_four)
+        self.skinchanger.add_dice(self.dice_five)
 
         self.rolls_lamp_line = widgets.LampLine()
         self.rolls_lamp_line.add_lamp(self.roll_one_lamp)
@@ -230,17 +248,36 @@ class GameScreen(Screen):
         self.small_road_explanation_label = widgets.Label("Kleine Straße = z.B. 1 2 3 4", (600, 480))
         self.big_road_explanation_label = widgets.Label("Große Straße = z.B. 1 2 3 4 5", (600, 510))
 
+        self.std_skinset.skinset_button = skinsets.SkinsetButton((430, 540, 32, 32), "dice_six.png")
+        self.std_skinset.skinset_button.set_action(self.change_skinset_to_black)
+        self.blue_skinset.skinset_button = skinsets.SkinsetButton((472, 540, 32, 32), "dice_six_blue.png")
+        self.blue_skinset.skinset_button.set_action(self.change_skinset_to_blue)
+        self.roman_skinset.skinset_button = skinsets.SkinsetButton((514, 540, 32, 32), "roman_VI.png")
+        self.roman_skinset.skinset_button.set_action(self.change_skinset_to_roman)
+
         self.start_new_game_button = widgets.Button("Start new Game", (200, 712.5, 195, 75))
         self.start_new_game_button.set_action(self.restart_game)
         self.home_button = widgets.Button("Home", (405, 712.5, 195, 75), font_size=40)
         self.home_button.set_action(self.quit_game)
+
+    def change_skinset_to_black(self):
+        self.skinchanger.set_current_skinset("black")
+        self.skinchanger.update_skinset()
+
+    def change_skinset_to_blue(self):
+        self.skinchanger.set_current_skinset("blue")
+        self.skinchanger.update_skinset()
+
+    def change_skinset_to_roman(self):
+        self.skinchanger.set_current_skinset("roman")
+        self.skinchanger.update_skinset()
     
     def reset_dice(self):
-        self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32))
-        self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32))
-        self.dice_three = widgets.KlickableDice(0, (525, 180, 32, 32), (725, 167, 32, 32))
-        self.dice_four = widgets.KlickableDice(0, (615, 230, 32, 32), (725, 201, 32, 32))
-        self.dice_five = widgets.KlickableDice(0, (590, 130, 32, 32), (725, 235, 32, 32))
+        self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_three = widgets.KlickableDice(0, (525, 180, 32, 32), (725, 167, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_four = widgets.KlickableDice(0, (615, 230, 32, 32), (725, 201, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_five = widgets.KlickableDice(0, (590, 130, 32, 32), (725, 235, 32, 32), self.skinchanger.get_current_skinset())
 
     def enter_ones(self):
         if self.game_manager.get_rerolls() == 3:
@@ -513,6 +550,9 @@ class GameScreen(Screen):
         self.big_road_button.handle_event(event)
         self.chance_button.handle_event(event)
         self.kniffel_button.handle_event(event)
+        self.std_skinset.skinset_button.handle_event(event)
+        self.blue_skinset.skinset_button.handle_event(event)
+        self.roman_skinset.skinset_button.handle_event(event)
 
     def update_sums_upper(self):
         self.upper_sum_wo_bonus_show.text = str(self.game_manager.score_upper_part())
@@ -617,6 +657,10 @@ class GameScreen(Screen):
         self.full_house_explanation_label.draw(surface)
         self.small_road_explanation_label.draw(surface)
         self.big_road_explanation_label.draw(surface)
+        pygame.draw.line(surface, (0, 0, 0), (420, 530), (779, 530), 2)
+        self.std_skinset.skinset_button.draw(surface)
+        self.blue_skinset.skinset_button.draw(surface)
+        self.roman_skinset.skinset_button.draw(surface)
 
         pygame.draw.line(surface, (0, 0, 0), (0, 700), (800, 700), 2)
         self.start_new_game_button.draw(surface)
