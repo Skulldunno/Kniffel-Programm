@@ -150,9 +150,59 @@ class Game:
             json.dump(highscore_daten, file, indent=4, ensure_ascii=False)
 
     def load_highscore(self):
-        with open("highscore.json", "r", encoding="utf-8") as file:
-            highscore_daten=json.load(file)
-        return highscore_daten
+        try:
+            with open("highscore.json", "r", encoding="utf-8") as file:
+                highscore_daten=json.load(file)
+            return highscore_daten
+        except FileNotFoundError:
+            standart_file = """[
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                }
+            ]"""
+
+            with open("highscore.json", "a", encoding="utf-8") as file:
+                file.write(standart_file)
+            with open("highscore.json", "r", encoding="utf-8") as file:
+                highscore_daten=json.load(file)
+            return highscore_daten
     
 if __name__ == "__main__":
     game = Game()
