@@ -241,8 +241,11 @@ class GameScreen(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.scoresheet.check_kniffel(self.game_manager.dice_list):
-            pass
-        self.game_manager.ones()
+            self.game_manager.scoresheet.ones = 5
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.ones()
         self.ones_button.text = str(self.game_manager.scoresheet.ones)
         self.rolls_lamp_line.turn_all_off()
         self.reset_dice()
@@ -257,8 +260,11 @@ class GameScreen(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.scoresheet.check_kniffel(self.game_manager.dice_list):
-            pass
-        self.game_manager.twos()
+            self.game_manager.scoresheet.twos = 10
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.twos()
         self.twos_button.text = str(self.game_manager.scoresheet.twos)
         self.rolls_lamp_line.turn_all_off()
         self.reset_dice()
@@ -273,8 +279,11 @@ class GameScreen(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.scoresheet.check_kniffel(self.game_manager.dice_list):
-            pass
-        self.game_manager.threes()
+            self.game_manager.scoresheet.threes = 15
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.threes()
         self.three_button.text = str(self.game_manager.scoresheet.threes)
         self.rolls_lamp_line.turn_all_off()
         self.reset_dice()
@@ -289,8 +298,11 @@ class GameScreen(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.scoresheet.check_kniffel(self.game_manager.dice_list):
-            pass
-        self.game_manager.fours()
+            self.game_manager.scoresheet.fours = 20
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.fours()
         self.fours_button.text = str(self.game_manager.scoresheet.fours)
         self.rolls_lamp_line.turn_all_off()
         self.reset_dice()
@@ -305,8 +317,11 @@ class GameScreen(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.scoresheet.check_kniffel(self.game_manager.dice_list):
-            pass
-        self.game_manager.fives()
+            self.game_manager.scoresheet.fives = 25
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.fives()
         self.fives_button.text = str(self.game_manager.scoresheet.fives)
         self.rolls_lamp_line.turn_all_off()
         self.reset_dice()
@@ -321,8 +336,11 @@ class GameScreen(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.scoresheet.check_kniffel(self.game_manager.dice_list):
-            pass
-        self.game_manager.sixes()
+            self.game_manager.scoresheet.sixes = 30
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.sixes()
         self.sixes_button.text = str(self.game_manager.scoresheet.sixes)
         self.rolls_lamp_line.turn_all_off()
         self.reset_dice()
@@ -422,11 +440,7 @@ class GameScreen(Screen):
     def enter_kniffel(self):
         if self.game_manager.get_rerolls() == 3:
             return
-        if self.game_manager.scoresheet.check_kniffel(self.game_manager.dice_list):
-            self.game_manager.scoresheet.kniffel = 50
-            self.game_manager.reset_rerolls()
-        else:
-            self.game_manager.kniffel()
+        self.game_manager.kniffel()
         self.kniffel_button.text = str(self.game_manager.scoresheet.kniffel)
         self.rolls_lamp_line.turn_all_off()
         self.reset_dice()
@@ -500,10 +514,12 @@ class GameScreen(Screen):
         self.upper_sum_show.text = str(self.game_manager.score_upper_part() + self.game_manager.scoresheet.bonus)
         self.bonus_show.text = str(self.game_manager.scoresheet.bonus)
         self.upper_sum_low_show.text = str(self.game_manager.score_upper_part() + self.game_manager.scoresheet.bonus)
+        self.extra_kniffel_show.text = str(self.game_manager.scoresheet.kniffel_bonus)
 
     def update_sums_lower(self):
         self.lower_sum_show.text = str(self.game_manager.score_lower_part())
         self.upper_sum_low_show.text = str(self.game_manager.score_upper_part() + self.game_manager.scoresheet.bonus)
+        self.extra_kniffel_show.text = str(self.game_manager.scoresheet.kniffel_bonus)
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
@@ -620,7 +636,8 @@ class ResultScreen(Screen):
         self.manager.change_screen(StartScreen(self.manager, self.game_manager))
 
     def save_highscore(self):
-        self.game_manager.save_highscore(self.name_input.text)
+        if self.name_input.text.strip() != "":
+            self.game_manager.save_highscore(self.name_input.text)
 
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)
