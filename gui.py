@@ -224,6 +224,11 @@ class GameScreen(Screen):
 
         self.lower_right_rect = pygame.Rect((400, 350, 400, 350))
         self.error_messages_rect = pygame.Rect((420, 370, 360, 310))
+        self.three_of_a_kind_explanation_label = widgets.Label("Dreierpasch = 3 gleiche", (600, 390))
+        self.four_of_a_kind_explanation_label = widgets.Label("Viererpasch = 4 gleiche", (600, 420))
+        self.full_house_explanation_label = widgets.Label("Full House = z.B. 4 4 4 1 1", (600, 450))
+        self.small_road_explanation_label = widgets.Label("Kleine Straße = z.B. 1 2 3 4", (600, 480))
+        self.big_road_explanation_label = widgets.Label("Große Straße = z.B. 1 2 3 4 5", (600, 510))
 
         self.start_new_game_button = widgets.Button("Start new Game", (200, 712.5, 195, 75))
         self.start_new_game_button.set_action(self.restart_game)
@@ -607,6 +612,11 @@ class GameScreen(Screen):
 
         pygame.draw.rect(surface, (0, 0, 0), self.lower_right_rect, 1)
         pygame.draw.rect(surface, (0, 0, 0), self.error_messages_rect, 2, 20)
+        self.three_of_a_kind_explanation_label.draw(surface)
+        self.four_of_a_kind_explanation_label.draw(surface)
+        self.full_house_explanation_label.draw(surface)
+        self.small_road_explanation_label.draw(surface)
+        self.big_road_explanation_label.draw(surface)
 
         pygame.draw.line(surface, (0, 0, 0), (0, 700), (800, 700), 2)
         self.start_new_game_button.draw(surface)
