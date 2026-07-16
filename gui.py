@@ -279,6 +279,14 @@ class GameScreen(Screen):
         self.dice_four = widgets.KlickableDice(0, (615, 230, 32, 32), (725, 201, 32, 32), self.skinchanger.get_current_skinset())
         self.dice_five = widgets.KlickableDice(0, (590, 130, 32, 32), (725, 235, 32, 32), self.skinchanger.get_current_skinset())
 
+        self.skinchanger.dice_list = []
+
+        self.skinchanger.add_dice(self.dice_one)
+        self.skinchanger.add_dice(self.dice_two)
+        self.skinchanger.add_dice(self.dice_three)
+        self.skinchanger.add_dice(self.dice_four)
+        self.skinchanger.add_dice(self.dice_five)
+
     def enter_ones(self):
         if self.game_manager.get_rerolls() == 3:
             return
