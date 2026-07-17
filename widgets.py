@@ -262,7 +262,12 @@ class TextField:
         rect = pygame.Rect(self.rect)
 
         pygame.draw.rect(surface, (255, 255, 255), rect)
-        pygame.draw.rect(surface, (0, 0, 0), rect, 2, 20)
+
+        if self.active_input:
+            pygame.draw.rect(surface, (0, 207, 255), rect, 2, 20)
+        else:
+            pygame.draw.rect(surface, (0, 0, 0), rect, 2, 20)
+
         if self.active_input:
             Label(self.text, (400, 630), 80).draw(surface)
         elif self.text != "":
