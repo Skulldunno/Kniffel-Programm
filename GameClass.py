@@ -1,6 +1,7 @@
 import DiceClass as D
 import scoresheet as scoshe
 import json
+from GameSettings import GameSettings
 
 class Game:
     def __init__(self):
@@ -14,6 +15,7 @@ class Game:
         self.dice_list = (dice1, dice2, dice3, dice4, dice5)
         self.__total = None
         self.scoresheet = scoshe.ScoreSheet()
+        self.settings = GameSettings()
 
     def game_over_check(self): # this method checks if the game is over and all scoresheet fields are filled
         if None not in self.scoresheet.__dict__.values():

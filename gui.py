@@ -3,10 +3,16 @@ import widgets
 import GameClass
 import skinsets
 import random
+import sys
 
 
 class Gui:
     def __init__(self):
+        if sys.platform == "win32":
+            import ctypes
+            myappid = 'kniffelspiel.subid.version.1'
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        
         pygame.init()
 
         pygame.display.set_icon(pygame.image.load("./assets/icon.png"))
@@ -188,7 +194,7 @@ class GameScreen(Screen):
         self.skinchanger.add_skinset("roman", self.roman_skinset)
         self.skinchanger.add_skinset("anti", self.anti_skinset)
 
-        self.skinchanger.set_current_skinset("black")
+        self.skinchanger.set_current_skinset(self.game_manager.settings.get_value("skinset"))
 
         self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32), self.skinchanger.get_current_skinset())
         self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32), self.skinchanger.get_current_skinset())
@@ -273,18 +279,22 @@ class GameScreen(Screen):
 
     def change_skinset_to_black(self):
         self.skinchanger.set_current_skinset("black")
+        self.game_manager.settings.set_value("skinset", "black")
         self.skinchanger.update_skinset()
 
     def change_skinset_to_blue(self):
         self.skinchanger.set_current_skinset("blue")
+        self.game_manager.settings.set_value("skinset", "blue")
         self.skinchanger.update_skinset()
 
     def change_skinset_to_roman(self):
         self.skinchanger.set_current_skinset("roman")
+        self.game_manager.settings.set_value("skinset", "roman")
         self.skinchanger.update_skinset()
 
     def change_skinset_to_anti(self):
         self.skinchanger.set_current_skinset("anti")
+        self.game_manager.settings.set_value("skinset", "anti")
         self.skinchanger.update_skinset()
     
     def reset_dice(self):
