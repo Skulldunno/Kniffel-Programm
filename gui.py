@@ -22,7 +22,7 @@ class Gui:
 
         self.game_manager = GameClass.Game()
 
-        self.current_screen = ResultScreenMultiplayer(self, self.game_manager)
+        self.current_screen = StartScreen(self, self.game_manager)
 
         self.iconchanger = IconChanger()
 
