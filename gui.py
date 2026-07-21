@@ -3,10 +3,16 @@ import widgets
 import GameClass
 import skinsets
 import random
+import sys
 
 
 class Gui:
     def __init__(self):
+        if sys.platform == "win32":
+            import ctypes
+            myappid = 'kniffelspiel.subid.version.1'
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        
         pygame.init()
 
         pygame.display.set_icon(pygame.image.load("./assets/icon.png"))
