@@ -110,15 +110,23 @@ class StartScreen(Screen):
         self.highscores_rect = pygame.Rect((200, 170, 400, 500))
         self.highscores_view = widgets.HighscoreView(game_manager.load_highscore())
 
-        self.start_button = widgets.Button("Start", (225, 700, 350, 60))
-        self.start_button.set_action(self.start_game)
+        self.start_singelplayer_button = widgets.Button("Einzelspieler", (115, 700, 275, 60))
+        self.start_singelplayer_button.set_action(self.start_singleplayer)
 
-    def start_game(self):
+        self.start_multiplayer_button = widgets.Button("Mehrspieler", (410, 700, 275, 60))
+        self.start_multiplayer_button.set_action(self.start_multiplayer)
+
+    def start_singleplayer(self):
         self.game_manager = GameClass.Game()
-        self.manager.change_screen(GameScreen(self.manager, self.game_manager))
+        self.manager.change_screen(GameScreenSinglerplayer(self.manager, self.game_manager))
+
+    def start_multiplayer(self):
+        # multiplayer gamemanager erstellen
+        self.manager.change_screen(GameScreenMultiplayer(self.manager, self.game_manager))
 
     def handle_events(self, event):
-        self.start_button.handle_event(event)
+        self.start_singelplayer_button.handle_event(event)
+        self.start_multiplayer_button.handle_event(event)
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
@@ -132,9 +140,10 @@ class StartScreen(Screen):
         pygame.draw.rect(surface, (0, 0, 0), self.highscores_rect, 2, 20)
         self.highscores_view.draw(surface)
 
-        self.start_button.draw(surface)
+        self.start_singelplayer_button.draw(surface)
+        self.start_multiplayer_button.draw(surface)
 
-class GameScreen(Screen):
+class GameScreenSinglerplayer(Screen):
     def __init__(self, manager, game_manager):
         super().__init__(manager, game_manager)
 
@@ -543,7 +552,7 @@ class GameScreen(Screen):
             self.show_results()
 
     def show_results(self):
-        self.manager.change_screen(ResultScreen(self.manager, self.game_manager))
+        self.manager.change_screen(ResultScreenSinglerplayer(self.manager, self.game_manager))
 
     def roll_all_dice(self):
         self.game_manager.roll_all_dice()
@@ -556,7 +565,7 @@ class GameScreen(Screen):
     
     def restart_game(self):
         self.game_manager = GameClass.Game()
-        self.manager.change_screen(GameScreen(self.manager, self.game_manager))
+        self.manager.change_screen(GameScreenSinglerplayer(self.manager, self.game_manager))
 
     def quit_game(self):
         self.manager.change_screen(StartScreen(self.manager, self.game_manager))
@@ -701,7 +710,7 @@ class GameScreen(Screen):
         self.start_new_game_button.draw(surface)
         self.home_button.draw(surface)
 
-class ResultScreen(Screen):
+class ResultScreenSinglerplayer(Screen):
     def __init__(self, manager, game_manager):
         super().__init__(manager, game_manager)
 
@@ -718,7 +727,7 @@ class ResultScreen(Screen):
     def start_new_game(self):
         self.save_highscore()
         self.game_manager = GameClass.Game()
-        self.manager.change_screen(GameScreen(self.manager, self.game_manager))
+        self.manager.change_screen(GameScreenSinglerplayer(self.manager, self.game_manager))
 
     def go_home(self):
         self.save_highscore()
@@ -744,3 +753,23 @@ class ResultScreen(Screen):
         self.name_input.draw(surface)
         self.start_new_game_button.draw(surface)
         self.home_button.draw(surface)
+
+class GameScreenMultiplayer(Screen):
+    def __init__(self, manager, game_manager):
+        super().__init__(manager, game_manager)
+
+    def handle_events(self, event):
+        pass
+
+    def draw(self, surface):
+        surface.fill((255, 255, 255))
+
+class ResultScreenMultiplayer(Screen):
+    def __init__(self, manager, game_manager):
+        super().__init__(manager, game_manager)
+
+    def handle_events(self, event):
+        pass
+
+    def draw(self, surface):
+        surface.fill((255, 255, 255))
