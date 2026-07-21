@@ -258,7 +258,7 @@ class TextField:
                 else:
                     self.active_input = True
 
-    def draw(self, surface):
+    def draw(self, surface, font_size=80):
         rect = pygame.Rect(self.rect)
 
         pygame.draw.rect(surface, (255, 255, 255), rect)
@@ -268,12 +268,14 @@ class TextField:
         else:
             pygame.draw.rect(surface, (0, 0, 0), rect, 2, 20)
 
-        if self.active_input:
-            Label(self.text, (400, 630), 80).draw(surface)
-        elif self.text != "":
-            Label(self.text, (400, 630), 80).draw(surface)
+        center_position = rect.center
+
+        if self.text != "" or self.active_input:
+            display_text = self.text
         else:
-            Label(self.placeholder, (400, 630), 80).draw(surface)
+            display_text = self.placeholder
+
+        Label(display_text, center_position, font_size).draw(surface)
 
 class HighscoreView:
     def __init__(self, highscores = [{'Name': 'Nick', 'Score': 3}, {'Name': 'Nick', 'Score': 2}, {'Name': 'Nick', 'Score': 2}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}]):

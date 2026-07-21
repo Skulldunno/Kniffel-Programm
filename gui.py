@@ -22,7 +22,7 @@ class Gui:
 
         self.game_manager = GameClass.Game()
 
-        self.current_screen = StartScreen(self, self.game_manager)
+        self.current_screen = ResultScreenMultiplayer(self, self.game_manager)
 
         self.iconchanger = IconChanger()
 
@@ -768,8 +768,46 @@ class ResultScreenMultiplayer(Screen):
     def __init__(self, manager, game_manager):
         super().__init__(manager, game_manager)
 
+        self.title_label = widgets.Label("Kniffel", (400, 37.5), 80)
+        self.highscore_show = widgets.ShowLabel("Highscore", (400, 125, 670, 75), 60)
+        self.highscore_value_show = widgets.ShowLabel(str("XXX"), (400, 215, 670, 90), 60)      # Werte aus multiplayer gamemanager
+
+        self.p1_points_show = widgets.ShowLabel(str("XXX"), (220, 420, 340, 300), 200)          # Werte aus multiplayer gamemanager
+        self.p1_name_input = widgets.TextField((50, 580, 340, 100))
+
+        self.p2_points_show = widgets.ShowLabel(str("XXX"), (580, 420, 340, 300), 200)          # Werte aus multiplayer gamemanager
+        self.p2_name_input = widgets.TextField((410, 580, 340, 100))
+
+        self.start_new_game_button = widgets.Button("Start New Game", (100, 700, 200, 50))
+        self.start_new_game_button.set_action(self.start_new_game)
+        self.home_button = widgets.Button("Home", (500, 700, 200, 50))
+        self.home_button.set_action(self.go_home)
+
+    def start_new_game(self):
+        # highscores speichern
+        # multiplayer gamemanager erstellen
+        self.manager.change_screen(GameScreenMultiplayer(self.manager, self.game_manager))
+
+    def go_home(self):
+        # highscores speichern
+        self.manager.change_screen(StartScreen(self.manager, self.game_manager))
+
     def handle_events(self, event):
-        pass
+        self.start_new_game_button.handle_event(event)
+        self.home_button.handle_event(event)
+        self.p1_name_input.handle_event(event)
+        self.p2_name_input.handle_event(event)
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
+
+        pygame.draw.line(surface, (0, 0, 0), (0, 75), (800, 75), 2)
+        self.title_label.draw(surface)
+        self.highscore_show.draw(surface)
+        self.highscore_value_show.draw(surface)
+        self.p1_points_show.draw(surface)
+        self.p1_name_input.draw(surface, 60)
+        self.p2_points_show.draw(surface)
+        self.p2_name_input.draw(surface, 60)
+        self.start_new_game_button.draw(surface)
+        self.home_button.draw(surface)
