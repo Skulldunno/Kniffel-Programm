@@ -2,6 +2,7 @@ import pygame
 import widgets
 import GameClass
 import skinsets
+import random
 
 
 class Gui:
@@ -36,7 +37,7 @@ class Gui:
             self.current_screen.draw(self.screen)
 
             #self.iconchanger.increment_frame_counter()
-            #pygame.display.set_icon(pygame.image.load(f"./assets/{self.iconchanger.icon_list[self.iconchanger.icon_index]}"))
+            #pygame.display.set_icon(self.iconchanger.icon_list[self.iconchanger.icon_index])
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -46,27 +47,33 @@ class Gui:
 
 class IconChanger:
     def __init__(self):
+        icon_one_png = pygame.image.load("assets/icon_one.png")
+        icon_two_png = pygame.image.load("assets/icon_two.png")
+        icon_three_png = pygame.image.load("assets/icon_three.png")
+        icon_four_png = pygame.image.load("assets/icon_four.png")
+        icon_five_png = pygame.image.load("assets/icon_five.png")
+        icon_six_png = pygame.image.load("assets/icon_six.png")
+
         self.icon_list = [
-            "icon_one.png",
-            "icon_two.png", 
-            "icon_three.png",
-            "icon_four.png",
-            "icon_five.png",
-            "icon_six.png"
+            icon_one_png,
+            icon_two_png, 
+            icon_three_png,
+            icon_four_png,
+            icon_five_png,
+            icon_six_png
             ]
         self.icon_index = 5
         self.frame_counter = 0
 
-    def increment_index(self):
-        if self.icon_index == 5:
-            self.icon_index = 0
-        else:
-            self.icon_index += 1
+    def change_index(self):
+        alt = self.icon_index
+        while alt == self.icon_index:
+            self.icon_index = random.randint(0, 5)       
 
     def increment_frame_counter(self):
         if self.frame_counter == 60:
             self.frame_counter = 0
-            self.increment_index()
+            self.change_index()
         else:
             self.frame_counter += 1
 
