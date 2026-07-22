@@ -19,10 +19,11 @@ class Label:
         surface.blit(self.image, self.rect)
 
 class ShowLabel:
-    def __init__(self, text, rect, font_size=32, color=(0, 0, 0)):
+    def __init__(self, text, rect, font_size=32, color=(0, 0, 0), frame_color=(0, 0, 0)):
         self.text = text
         self.position = (rect[0], rect[1])
         self.color = color
+        self.frame_color = frame_color
 
         self.label_rect = pygame.Rect(rect[0] - (rect[2]/2), rect[1] - (rect[3]/2), rect[2], rect[3])
 
@@ -41,8 +42,11 @@ class ShowLabel:
             True,
             self.color
         )
-        pygame.draw.rect(surface, self.color, self.label_rect, 2, 20)
-        surface.blit(self.image, self.rect)      
+        text_rect = self.image.get_rect(
+            center=self.rect.center
+        )
+        pygame.draw.rect(surface, self.frame_color, self.label_rect, 2, 20)
+        surface.blit(self.image, text_rect)      
 
 class Lamp:
     def __init__(self, rect, color_off=(255, 255, 255), color_on=(255, 0, 0), state = False, border_radius=-1, width=1):
@@ -114,13 +118,15 @@ class LampLine:
                 self.__lamp_list[lamp].state = False
 
 class Button:
-    def __init__(self, text, rect, color=(255, 255, 255), hover_color=(171, 171, 171), text_color=(0, 0, 0), font_size=32):
+    def __init__(self, text, rect, color=(255, 255, 255), hover_color=(171, 171, 171), text_color=(0, 0, 0), font_size=32, frame_color=(0, 0, 0), action_locked=False):
         self.text = text
         self.rect = pygame.Rect(rect)
 
         self.color = color
         self.hover_color = hover_color
         self.text_color = text_color
+        self.frame_color = frame_color
+        self.action_locked = action_locked
 
         self.font = pygame.font.Font(None, font_size)
 
@@ -133,7 +139,7 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
 
-                if self.action:
+                if self.action and self.action_locked == False:
                     self.action()
 
     def draw(self, surface):
@@ -154,7 +160,7 @@ class Button:
 
         pygame.draw.rect(
             surface,
-            (0, 0, 0),
+            self.frame_color,
             self.rect,
             2,
             20
@@ -242,7 +248,7 @@ class TextField:
         self.rect = rect
         self.text_font = pygame.font.SysFont(None, 80)
 
-    def handle_event(self, event):
+    def handle_event(self, event, others_list: list = []):
         if event.type == pygame.KEYDOWN and self.active_input:
             if event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]
@@ -255,10 +261,13 @@ class TextField:
             if rect.collidepoint(event.pos):
                 if self.active_input:
                     self.active_input = False
-                else:
+                elif self.active_input == False:
                     self.active_input = True
+                    if others_list != []:
+                        for textfield in others_list:
+                            textfield.active_input = False
 
-    def draw(self, surface):
+    def draw(self, surface, font_size=80):
         rect = pygame.Rect(self.rect)
 
         pygame.draw.rect(surface, (255, 255, 255), rect)
@@ -268,12 +277,14 @@ class TextField:
         else:
             pygame.draw.rect(surface, (0, 0, 0), rect, 2, 20)
 
-        if self.active_input:
-            Label(self.text, (400, 630), 80).draw(surface)
-        elif self.text != "":
-            Label(self.text, (400, 630), 80).draw(surface)
+        center_position = rect.center
+
+        if self.text != "" or self.active_input:
+            display_text = self.text
         else:
-            Label(self.placeholder, (400, 630), 80).draw(surface)
+            display_text = self.placeholder
+
+        Label(display_text, center_position, font_size).draw(surface)
 
 class HighscoreView:
     def __init__(self, highscores = [{'Name': 'Nick', 'Score': 3}, {'Name': 'Nick', 'Score': 2}, {'Name': 'Nick', 'Score': 2}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}, {'Name': '---', 'Score': 0}]):
@@ -302,3 +313,66 @@ class HighscoreView:
 
         for label in self.score_labels:
             label.draw(surface)
+
+class MultiplayerColumnControl:
+    def __init__(self, p1_object_list, p2_object_list):
+        self.p1_column = True
+        self.p1_object_list = p1_object_list
+        self.p2_object_list = p2_object_list
+
+        for objects in self.p1_object_list:
+            if type(objects) == Button:
+                objects.frame_color = (53, 237, 78)
+                continue
+            elif type(objects) == ShowLabel:
+                objects.frame_color = (53, 237, 78)
+
+        for objects in self.p2_object_list:
+                if type(objects) == Button:
+                    objects.hover_color = (255, 255, 255)
+                    objects.action_locked = True
+                    continue
+
+    def switch_column(self):
+        if self.p1_column:
+            self.p1_column = False
+
+            for objects in self.p2_object_list:
+                if type(objects) == Button:
+                    objects.frame_color = (53, 237, 78)
+                    if objects.action != None:
+                        objects.hover_color = (171, 171, 171)
+                    objects.action_locked = False
+                    continue
+                elif type(objects) == ShowLabel:
+                    objects.frame_color = (53, 237, 78)
+
+            for objects in self.p1_object_list:
+                if type(objects) == Button:
+                    objects.frame_color = (0, 0, 0)
+                    objects.hover_color = (255, 255, 255)
+                    objects.action_locked = True
+                    continue
+                elif type(objects) == ShowLabel:
+                    objects.frame_color = (0, 0, 0)
+        else:
+            self.p1_column = True
+
+            for objects in self.p1_object_list:
+                if type(objects) == Button:
+                    objects.frame_color = (53, 237, 78)
+                    if objects.action != None:
+                        objects.hover_color = (171, 171, 171)
+                    objects.action_locked = False
+                    continue
+                elif type(objects) == ShowLabel:
+                    objects.frame_color = (53, 237, 78)
+
+            for objects in self.p2_object_list:
+                if type(objects) == Button:
+                    objects.frame_color = (0, 0, 0)
+                    objects.hover_color = (255, 255, 255)
+                    objects.action_locked = True
+                    continue
+                elif type(objects) == ShowLabel:
+                    objects.frame_color = (0, 0, 0)
