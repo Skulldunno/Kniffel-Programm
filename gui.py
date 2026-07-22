@@ -121,7 +121,7 @@ class StartScreen(Screen):
         self.manager.change_screen(GameScreenSinglerplayer(self.manager, self.game_manager))
 
     def start_multiplayer(self):
-        # multiplayer gamemanager erstellen
+        self.game_manager = GameClass.GameMultiplayer()
         self.manager.change_screen(GameScreenMultiplayer(self.manager, self.game_manager))
 
     def handle_events(self, event):
@@ -767,7 +767,9 @@ class GameScreenMultiplayer(Screen):
         self.ones_label = widgets.Label("nur Einser zählen", (100, 95), 26)
         self.arrow_ones = widgets.ArrowRight((200, 95), 30)
         self.p1_ones_button = widgets.Button("", (235, 82.5, 67.5, 25))
+        self.p1_ones_button.set_action(self.enter_ones)
         self.p2_ones_button = widgets.Button("", (307.5, 82.5, 67.5, 25))
+        self.p2_ones_button.set_action(self.enter_ones)
 
         self.twos_label = widgets.Label("nur Zweier zählen", (100, 125), 26)
         self.arrow_twos = widgets.ArrowRight((200, 125), 30)
@@ -816,7 +818,7 @@ class GameScreenMultiplayer(Screen):
         self.roll_two_lamp = widgets.Lamp((470, 290, 40, 40), border_radius=20, width=2)
         self.roll_three_lamp = widgets.Lamp((520, 290, 40, 40), border_radius=20, width=2)
         self.roll_dices_button = widgets.Button("Würfeln", (580, 290, 200, 40))
-        #self.roll_dices_button.set_action(self.roll_all_dice)
+        self.roll_dices_button.set_action(self.roll_all_dice)
 
         self.std_skinset = skinsets.StandartSkinset()
         self.blue_skinset = skinsets.BlueSkinset()
@@ -926,6 +928,20 @@ class GameScreenMultiplayer(Screen):
         self.home_button = widgets.Button("Home", (405, 712.5, 195, 75), font_size=40)
         self.home_button.set_action(self.quit_game)
 
+        p1_object_list = [self.p1_ones_button, self.p1_twos_button, self.p1_three_button, self.p1_fours_button, self.p1_fives_button, self.p1_sixes_button,
+                          self.p1_upper_sum_wo_bonus_show, self.p1_bonus_show, self.p1_upper_sum_show,
+                          self.p1_three_of_a_kind_button, self.p1_four_of_a_kind_button, self.p1_small_road_button, self.p1_big_road_button,
+                          self.p1_full_house_button, self.p1_kniffel_button, self.p1_chance_button,
+                          self.p1_upper_sum_low_show, self.p1_lower_sum_show, self.p1_extra_kniffel_show, self.p1_end_sum_show]
+
+        p2_object_list = [self.p2_ones_button, self.p2_twos_button, self.p2_three_button, self.p2_fours_button, self.p2_fives_button, self.p2_sixes_button,
+                          self.p2_upper_sum_wo_bonus_show, self.p2_bonus_show, self.p2_upper_sum_show,
+                          self.p2_three_of_a_kind_button, self.p2_four_of_a_kind_button, self.p2_small_road_button, self.p2_big_road_button,
+                          self.p2_full_house_button, self.p2_kniffel_button, self.p2_chance_button,
+                          self.p2_upper_sum_low_show, self.p2_lower_sum_show, self.p2_extra_kniffel_show, self.p2_end_sum_show]
+
+        self.column_controller = widgets.MultiplayerColumnControl(p1_object_list, p2_object_list)
+
     def change_skinset_to_black(self):
         self.skinchanger.set_current_skinset("black")
         #self.game_manager.settings.set_value("skinset", "black")
@@ -946,12 +962,91 @@ class GameScreenMultiplayer(Screen):
         #self.game_manager.settings.set_value("skinset", "anti")
         self.skinchanger.update_skinset()
 
+    def roll_all_dice(self):
+        self.game_manager.roll_all_dice()
+        self.dice_one.set_eyes(self.game_manager.dice_list[0].get_eyes())
+        self.dice_two.set_eyes(self.game_manager.dice_list[1].get_eyes())
+        self.dice_three.set_eyes(self.game_manager.dice_list[2].get_eyes())
+        self.dice_four.set_eyes(self.game_manager.dice_list[3].get_eyes())
+        self.dice_five.set_eyes(self.game_manager.dice_list[4].get_eyes())
+        self.rolls_lamp_line.turn_number_of_lamps_on(3 - self.game_manager.get_rerolls())
+
+    def reset_dice(self):
+        self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_three = widgets.KlickableDice(0, (525, 180, 32, 32), (725, 167, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_four = widgets.KlickableDice(0, (615, 230, 32, 32), (725, 201, 32, 32), self.skinchanger.get_current_skinset())
+        self.dice_five = widgets.KlickableDice(0, (590, 130, 32, 32), (725, 235, 32, 32), self.skinchanger.get_current_skinset())
+
+        self.skinchanger.dice_list = []
+
+        self.skinchanger.add_dice(self.dice_one)
+        self.skinchanger.add_dice(self.dice_two)
+        self.skinchanger.add_dice(self.dice_three)
+        self.skinchanger.add_dice(self.dice_four)
+        self.skinchanger.add_dice(self.dice_five)
+
+    def enter_ones(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.ones = 5
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.ones()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            ones_button = self.p1_ones_button
+        else:
+            ones_button = self.p2_ones_button
+
+        ones_button.text = str(self.game_manager.active_scoresheet.ones)
+        ones_button.set_action(None)
+        ones_button.hover_color = (255, 255, 255)
+
+        self.update_sums_upper()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def update_sums_upper(self):
+        if self.game_manager.p1_turn:
+            upper_sum_wo_bonus_show = self.p1_upper_sum_wo_bonus_show
+            upper_sum_show = self.p1_upper_sum_show
+            bonus_show = self.p1_bonus_show
+            upper_sum_low_show = self.p1_upper_sum_low_show
+            extra_kniffel_show = self.p1_extra_kniffel_show
+        else:
+            upper_sum_wo_bonus_show = self.p2_upper_sum_wo_bonus_show
+            upper_sum_show = self.p2_upper_sum_show
+            bonus_show = self.p2_bonus_show
+            upper_sum_low_show = self.p2_upper_sum_low_show
+            extra_kniffel_show = self.p2_extra_kniffel_show
+
+        upper_sum_wo_bonus_show.text = str(self.game_manager.score_upper_part())
+        upper_sum_show.text = str(self.game_manager.score_upper_part() + self.game_manager.active_scoresheet.bonus)
+        bonus_show.text = str(self.game_manager.active_scoresheet.bonus)
+        upper_sum_low_show.text = str(self.game_manager.score_upper_part() + self.game_manager.active_scoresheet.bonus)
+        extra_kniffel_show.text = str(self.game_manager.active_scoresheet.kniffel_bonus)
+
+    def switch_turn(self):
+        self.game_manager.switch_turn()
+        self.column_controller.switch_column()
+
     def restart_game(self):
-        # multiplayer gamemanager erstellen
+        self.game_manager = GameClass.GameMultiplayer()
         self.manager.change_screen(GameScreenMultiplayer(self.manager, self.game_manager))
 
     def quit_game(self):
         self.manager.change_screen(StartScreen(self.manager, self.game_manager))
+
+    def show_results(self):
+        self.manager.change_screen(ResultScreenMultiplayer(self.manager, self.game_manager))
 
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)

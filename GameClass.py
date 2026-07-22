@@ -206,6 +206,85 @@ class Game:
                 highscore_daten=json.load(file)
             return highscore_daten
     
+class GameMultiplayer:
+    def __init__(self):
+        self.__rerolls_left = 3
+        self.__kniffel_rolled = False
+        self.p1_turn = True
+        dice1 = D.Dice()
+        dice2 = D.Dice()
+        dice3 = D.Dice()
+        dice4 = D.Dice()
+        dice5 = D.Dice()
+        self.dice_list = (dice1, dice2, dice3, dice4, dice5)
+        self.p1_scoresheet = scoshe.ScoreSheet()
+        self.p2_scoresheet = scoshe.ScoreSheet()
+        self.active_scoresheet = self.p1_scoresheet
+        self.settings = GameSettings()
+
+    def switch_active_scoresheet(self):
+        if self.active_scoresheet == self.p1_scoresheet:
+            self.active_scoresheet = self.p2_scoresheet
+        else:
+            self.active_scoresheet = self.p1_scoresheet
+
+    def game_over_check(self): # this method checks if the game is over and all scoresheet fields are filled
+        if None not in self.p1_scoresheet.__dict__.values():
+            return True
+
+    def reset_rerolls(self): # This method resets the rerolls. should be triggered every round
+        self.__rerolls_left = 3
+
+    def get_rerolls(self):
+        return self.__rerolls_left
+    
+    def unlock_all_dice(self):
+        for die in self.dice_list:
+            die.set_locked_false()
+
+    def roll_all_dice(self):
+        if self.__rerolls_left > 0:
+            for die in self.dice_list:
+                die.roll()
+            self.__rerolls_left -= 1
+    
+    def switch_turn(self):
+        if self.p1_turn:
+            self.p1_turn = False
+        else:
+            self.p1_turn = True
+
+    def score_upper_part(self):
+        upper_part = [self.active_scoresheet.ones, self.active_scoresheet.twos, self.active_scoresheet.threes, self.active_scoresheet.fours, self.active_scoresheet.fives, self.active_scoresheet.sixes]
+        total = 0
+        
+        for number in upper_part:
+            if type(number) == int:
+                total += number
+        return total
+
+    def score_lower_part(self):
+        lower_part = [self.active_scoresheet.three_of_a_kind, self.active_scoresheet.four_of_a_kind, self.active_scoresheet.full_house, self.active_scoresheet.small_straight, self.active_scoresheet.large_straight, self.active_scoresheet.chance, self.active_scoresheet.kniffel]
+        total = 0
+        
+        for number in lower_part:
+            if type(number) == int:
+                total += number
+        return total
+
+    def score_bonus(self):
+        if self.score_upper_part() >= 63 :
+            self.active_scoresheet.bonus = 35
+        else:
+            self.active_scoresheet.bonus = 0
+
+    def ones(self): # this method is to be used by the button for ones
+        self.active_scoresheet.ones = self.active_scoresheet.score_upper(self.dice_list, 1)
+        self.score_bonus()
+        self.reset_rerolls()
+
+
+
 if __name__ == "__main__":
     game = Game()
     game.game_over_check()

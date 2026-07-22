@@ -19,10 +19,11 @@ class Label:
         surface.blit(self.image, self.rect)
 
 class ShowLabel:
-    def __init__(self, text, rect, font_size=32, color=(0, 0, 0)):
+    def __init__(self, text, rect, font_size=32, color=(0, 0, 0), frame_color=(0, 0, 0)):
         self.text = text
         self.position = (rect[0], rect[1])
         self.color = color
+        self.frame_color = frame_color
 
         self.label_rect = pygame.Rect(rect[0] - (rect[2]/2), rect[1] - (rect[3]/2), rect[2], rect[3])
 
@@ -41,7 +42,7 @@ class ShowLabel:
             True,
             self.color
         )
-        pygame.draw.rect(surface, self.color, self.label_rect, 2, 20)
+        pygame.draw.rect(surface, self.frame_color, self.label_rect, 2, 20)
         surface.blit(self.image, self.rect)      
 
 class Lamp:
@@ -114,13 +115,14 @@ class LampLine:
                 self.__lamp_list[lamp].state = False
 
 class Button:
-    def __init__(self, text, rect, color=(255, 255, 255), hover_color=(171, 171, 171), text_color=(0, 0, 0), font_size=32):
+    def __init__(self, text, rect, color=(255, 255, 255), hover_color=(171, 171, 171), text_color=(0, 0, 0), font_size=32, frame_color=(0, 0, 0)):
         self.text = text
         self.rect = pygame.Rect(rect)
 
         self.color = color
         self.hover_color = hover_color
         self.text_color = text_color
+        self.frame_color = frame_color
 
         self.font = pygame.font.Font(None, font_size)
 
@@ -154,7 +156,7 @@ class Button:
 
         pygame.draw.rect(
             surface,
-            (0, 0, 0),
+            self.frame_color,
             self.rect,
             2,
             20
@@ -304,3 +306,50 @@ class HighscoreView:
 
         for label in self.score_labels:
             label.draw(surface)
+
+class MultiplayerColumnControl:
+    def __init__(self, p1_object_list, p2_object_list):
+        self.p1_column = True
+        self.p1_object_list = p1_object_list
+        self.p2_object_list = p2_object_list
+
+        for objects in self.p1_object_list:
+            if type(objects) == Button:
+                objects.frame_color = (53, 237, 78)
+                continue
+            elif type(objects) == ShowLabel:
+                objects.frame_color = (53, 237, 78)
+
+    def switch_column(self):
+        if self.p1_column:
+            self.p1_column = False
+
+            for objects in self.p2_object_list:
+                if type(objects) == Button:
+                    objects.frame_color = (53, 237, 78)
+                    continue
+                elif type(objects) == ShowLabel:
+                    objects.frame_color = (53, 237, 78)
+
+            for objects in self.p1_object_list:
+                if type(objects) == Button:
+                    objects.frame_color = (0, 0, 0)
+                    continue
+                elif type(objects) == ShowLabel:
+                    objects.frame_color = (0, 0, 0)
+        else:
+            self.p1_column = True
+
+            for objects in self.p1_object_list:
+                if type(objects) == Button:
+                    objects.frame_color = (53, 237, 78)
+                    continue
+                elif type(objects) == ShowLabel:
+                    objects.frame_color = (53, 237, 78)
+
+            for objects in self.p2_object_list:
+                if type(objects) == Button:
+                    objects.frame_color = (0, 0, 0)
+                    continue
+                elif type(objects) == ShowLabel:
+                    objects.frame_color = (0, 0, 0)
