@@ -1200,6 +1200,9 @@ class GameScreenMultiplayer(Screen):
         self.update_sums_lower()
         self.switch_turn()
 
+        if self.game_manager.game_over_check():
+            self.show_results()
+
     def enter_four_of_a_kind(self):
         if self.game_manager.get_rerolls() == 3:
             return
@@ -1221,6 +1224,9 @@ class GameScreenMultiplayer(Screen):
 
         self.update_sums_lower()
         self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
     
     def enter_full_house(self):
         if self.game_manager.get_rerolls() == 3:
