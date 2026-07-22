@@ -1043,6 +1043,7 @@ class GameScreenMultiplayer(Screen):
         self.manager.change_screen(GameScreenMultiplayer(self.manager, self.game_manager))
 
     def quit_game(self):
+        self.game_manager = GameClass.Game()
         self.manager.change_screen(StartScreen(self.manager, self.game_manager))
 
     def show_results(self):

@@ -115,7 +115,7 @@ class LampLine:
                 self.__lamp_list[lamp].state = False
 
 class Button:
-    def __init__(self, text, rect, color=(255, 255, 255), hover_color=(171, 171, 171), text_color=(0, 0, 0), font_size=32, frame_color=(0, 0, 0)):
+    def __init__(self, text, rect, color=(255, 255, 255), hover_color=(171, 171, 171), text_color=(0, 0, 0), font_size=32, frame_color=(0, 0, 0), action_locked=False):
         self.text = text
         self.rect = pygame.Rect(rect)
 
@@ -123,6 +123,7 @@ class Button:
         self.hover_color = hover_color
         self.text_color = text_color
         self.frame_color = frame_color
+        self.action_locked = action_locked
 
         self.font = pygame.font.Font(None, font_size)
 
@@ -135,7 +136,7 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
 
-                if self.action:
+                if self.action and self.action_locked == False:
                     self.action()
 
     def draw(self, surface):
@@ -320,6 +321,12 @@ class MultiplayerColumnControl:
             elif type(objects) == ShowLabel:
                 objects.frame_color = (53, 237, 78)
 
+        for objects in self.p2_object_list:
+                if type(objects) == Button:
+                    objects.hover_color = (255, 255, 255)
+                    objects.action_locked = True
+                    continue
+
     def switch_column(self):
         if self.p1_column:
             self.p1_column = False
@@ -327,6 +334,8 @@ class MultiplayerColumnControl:
             for objects in self.p2_object_list:
                 if type(objects) == Button:
                     objects.frame_color = (53, 237, 78)
+                    objects.hover_color = (171, 171, 171)
+                    objects.action_locked = False
                     continue
                 elif type(objects) == ShowLabel:
                     objects.frame_color = (53, 237, 78)
@@ -334,6 +343,8 @@ class MultiplayerColumnControl:
             for objects in self.p1_object_list:
                 if type(objects) == Button:
                     objects.frame_color = (0, 0, 0)
+                    objects.hover_color = (255, 255, 255)
+                    objects.action_locked = True
                     continue
                 elif type(objects) == ShowLabel:
                     objects.frame_color = (0, 0, 0)
@@ -343,6 +354,8 @@ class MultiplayerColumnControl:
             for objects in self.p1_object_list:
                 if type(objects) == Button:
                     objects.frame_color = (53, 237, 78)
+                    objects.hover_color = (171, 171, 171)
+                    objects.action_locked = False
                     continue
                 elif type(objects) == ShowLabel:
                     objects.frame_color = (53, 237, 78)
@@ -350,6 +363,8 @@ class MultiplayerColumnControl:
             for objects in self.p2_object_list:
                 if type(objects) == Button:
                     objects.frame_color = (0, 0, 0)
+                    objects.hover_color = (255, 255, 255)
+                    objects.action_locked = True
                     continue
                 elif type(objects) == ShowLabel:
                     objects.frame_color = (0, 0, 0)
