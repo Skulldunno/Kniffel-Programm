@@ -774,27 +774,37 @@ class GameScreenMultiplayer(Screen):
         self.twos_label = widgets.Label("nur Zweier zählen", (100, 125), 26)
         self.arrow_twos = widgets.ArrowRight((200, 125), 30)
         self.p1_twos_button = widgets.Button("", (235, 112.5, 67.5, 25))
+        self.p1_twos_button.set_action(self.enter_twos)
         self.p2_twos_button = widgets.Button("", (307.5, 112.5, 67.5, 25))
+        self.p2_twos_button.set_action(self.enter_twos)
 
         self.threes_label = widgets.Label("nur Dreier zählen", (100, 155), 26)
         self.arrow_threes = widgets.ArrowRight((200, 155), 30)
         self.p1_three_button = widgets.Button("", (235, 142.5, 67.5, 25))
+        self.p1_three_button.set_action(self.enter_three)
         self.p2_three_button = widgets.Button("", (307.5, 142.5, 67.5, 25))
+        self.p2_three_button.set_action(self.enter_three)
 
         self.fours_label = widgets.Label("nur Vierer zählen", (100, 185), 26)
         self.arrow_fours = widgets.ArrowRight((200, 185), 30)
         self.p1_fours_button = widgets.Button("", (235, 172.5, 67.5, 25))
+        self.p1_fours_button.set_action(self.enter_fours)
         self.p2_fours_button = widgets.Button("", (307.5, 172.5, 67.5, 25))
+        self.p2_fours_button.set_action(self.enter_fours)
 
         self.fives_label = widgets.Label("nur Fünfer zählen", (100, 215), 26)
         self.arrow_fives = widgets.ArrowRight((200, 215), 30)
         self.p1_fives_button = widgets.Button("", (235, 202.5, 67.5, 25))
+        self.p1_fives_button.set_action(self.enter_fives)
         self.p2_fives_button = widgets.Button("", (307.5, 202.5, 67.5, 25))
+        self.p2_fives_button.set_action(self.enter_fives)
 
         self.sixes_label = widgets.Label("nur Sechser zählen", (100, 245), 26)
         self.arrow_sixes = widgets.ArrowRight((200, 245), 30)
         self.p1_sixes_button = widgets.Button("", (235, 232.5, 67.5, 25))
+        self.p1_sixes_button.set_action(self.enter_sixes)
         self.p2_sixes_button = widgets.Button("", (307.5, 232.5, 67.5, 25))
+        self.p2_sixes_button.set_action(self.enter_sixes)
 
         self.upper_sum_wo_bonus_label = widgets.Label("gesamt", (100, 275), 26)
         self.upper_sum_wo_bonus_arrow = widgets.ArrowRight((200, 275), 30)
@@ -831,7 +841,7 @@ class GameScreenMultiplayer(Screen):
         self.skinchanger.add_skinset("roman", self.roman_skinset)
         self.skinchanger.add_skinset("anti", self.anti_skinset)
 
-        self.skinchanger.set_current_skinset("black")       # später noch aus settings auslesen
+        self.skinchanger.set_current_skinset(self.game_manager.settings.get_value("skinset"))
 
         self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32), self.skinchanger.get_current_skinset())
         self.dice_two = widgets.KlickableDice(0, (485, 220, 32, 32), (725, 133, 32, 32), self.skinchanger.get_current_skinset())
@@ -944,22 +954,22 @@ class GameScreenMultiplayer(Screen):
 
     def change_skinset_to_black(self):
         self.skinchanger.set_current_skinset("black")
-        #self.game_manager.settings.set_value("skinset", "black")
+        self.game_manager.settings.set_value("skinset", "black")
         self.skinchanger.update_skinset()
 
     def change_skinset_to_blue(self):
         self.skinchanger.set_current_skinset("blue")
-        #self.game_manager.settings.set_value("skinset", "blue")
+        self.game_manager.settings.set_value("skinset", "blue")
         self.skinchanger.update_skinset()
 
     def change_skinset_to_roman(self):
         self.skinchanger.set_current_skinset("roman")
-        #self.game_manager.settings.set_value("skinset", "roman")
+        self.game_manager.settings.set_value("skinset", "roman")
         self.skinchanger.update_skinset()
 
     def change_skinset_to_anti(self):
         self.skinchanger.set_current_skinset("anti")
-        #self.game_manager.settings.set_value("skinset", "anti")
+        self.game_manager.settings.set_value("skinset", "anti")
         self.skinchanger.update_skinset()
 
     def roll_all_dice(self):
@@ -1014,6 +1024,146 @@ class GameScreenMultiplayer(Screen):
         if self.game_manager.game_over_check():
             self.show_results()
 
+    def enter_twos(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.twos = 5
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.twos()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            twos_button = self.p1_twos_button
+        else:
+            twos_button = self.p2_twos_button
+
+        twos_button.text = str(self.game_manager.active_scoresheet.twos)
+        twos_button.set_action(None)
+        twos_button.hover_color = (255, 255, 255)
+
+        self.update_sums_upper()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def enter_three(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.threes = 5
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.threes()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            three_button = self.p1_three_button
+        else:
+            three_button = self.p2_three_button
+
+        three_button.text = str(self.game_manager.active_scoresheet.threes)
+        three_button.set_action(None)
+        three_button.hover_color = (255, 255, 255)
+
+        self.update_sums_upper()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def enter_fours(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.fours = 5
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.fours()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            fours_button = self.p1_fours_button
+        else:
+            fours_button = self.p2_fours_button
+
+        fours_button.text = str(self.game_manager.active_scoresheet.fours)
+        fours_button.set_action(None)
+        fours_button.hover_color = (255, 255, 255)
+
+        self.update_sums_upper()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def enter_fives(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.fives = 5
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.fives()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            fives_button = self.p1_fives_button
+        else:
+            fives_button = self.p2_fives_button
+
+        fives_button.text = str(self.game_manager.active_scoresheet.fives)
+        fives_button.set_action(None)
+        fives_button.hover_color = (255, 255, 255)
+
+        self.update_sums_upper()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def enter_sixes(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.sixes = 5
+            self.game_manager.score_bonus()
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.sixes()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            sixes_button = self.p1_sixes_button
+        else:
+            sixes_button = self.p2_sixes_button
+
+        sixes_button.text = str(self.game_manager.active_scoresheet.sixes)
+        sixes_button.set_action(None)
+        sixes_button.hover_color = (255, 255, 255)
+
+        self.update_sums_upper()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
     def update_sums_upper(self):
         if self.game_manager.p1_turn:
             upper_sum_wo_bonus_show = self.p1_upper_sum_wo_bonus_show
@@ -1037,6 +1187,7 @@ class GameScreenMultiplayer(Screen):
     def switch_turn(self):
         self.game_manager.switch_turn()
         self.column_controller.switch_column()
+        self.game_manager.switch_active_scoresheet()
 
     def restart_game(self):
         self.game_manager = GameClass.GameMultiplayer()

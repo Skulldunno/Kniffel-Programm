@@ -334,7 +334,8 @@ class MultiplayerColumnControl:
             for objects in self.p2_object_list:
                 if type(objects) == Button:
                     objects.frame_color = (53, 237, 78)
-                    objects.hover_color = (171, 171, 171)
+                    if objects.action != None:
+                        objects.hover_color = (171, 171, 171)
                     objects.action_locked = False
                     continue
                 elif type(objects) == ShowLabel:
@@ -354,7 +355,8 @@ class MultiplayerColumnControl:
             for objects in self.p1_object_list:
                 if type(objects) == Button:
                     objects.frame_color = (53, 237, 78)
-                    objects.hover_color = (171, 171, 171)
+                    if objects.action != None:
+                        objects.hover_color = (171, 171, 171)
                     objects.action_locked = False
                     continue
                 elif type(objects) == ShowLabel:

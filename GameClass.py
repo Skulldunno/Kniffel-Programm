@@ -283,6 +283,31 @@ class GameMultiplayer:
         self.score_bonus()
         self.reset_rerolls()
 
+    def twos(self): # this method is to be used by the button for twos
+        self.active_scoresheet.twos = self.active_scoresheet.score_upper(self.dice_list, 2)
+        self.score_bonus()
+        self.reset_rerolls()
+
+    def threes(self): # this method is to be used by the button for threes
+        self.active_scoresheet.threes = self.active_scoresheet.score_upper(self.dice_list, 3)
+        self.score_bonus()
+        self.reset_rerolls()
+    
+    def fours(self): # this method is to be used by the button for fours
+        self.active_scoresheet.fours = self.active_scoresheet.score_upper(self.dice_list, 4)
+        self.score_bonus()
+        self.reset_rerolls()
+    
+    def fives(self): # this method is to be used by the button for fives
+        self.active_scoresheet.fives = self.active_scoresheet.score_upper(self.dice_list, 5)
+        self.score_bonus()
+        self.reset_rerolls()
+
+    def sixes(self): # this method is to be used by the button for sixes
+        self.active_scoresheet.sixes = self.active_scoresheet.score_upper(self.dice_list, 6)
+        self.score_bonus()
+        self.reset_rerolls()
+
 
 
 if __name__ == "__main__":
