@@ -219,6 +219,8 @@ class GameMultiplayer:
         self.dice_list = (dice1, dice2, dice3, dice4, dice5)
         self.p1_scoresheet = scoshe.ScoreSheet()
         self.p2_scoresheet = scoshe.ScoreSheet()
+        self.__p1_total = 0
+        self.__p2_total = 0
         self.active_scoresheet = self.p1_scoresheet
         self.settings = GameSettings()
 
@@ -229,7 +231,9 @@ class GameMultiplayer:
             self.active_scoresheet = self.p1_scoresheet
 
     def game_over_check(self): # this method checks if the game is over and all scoresheet fields are filled
-        if None not in self.p1_scoresheet.__dict__.values():
+        if None not in self.p2_scoresheet.__dict__.values():
+            self.p1_tally_total()
+            self.p2_tally_total()
             return True
 
     def reset_rerolls(self): # This method resets the rerolls. should be triggered every round
@@ -308,7 +312,117 @@ class GameMultiplayer:
         self.score_bonus()
         self.reset_rerolls()
 
+    def three_of_a_kind(self): # this method is to be used by the button for three of a kind
+        self.active_scoresheet.three_of_a_kind = self.active_scoresheet.score_three_of_a_kind(self.dice_list)
+        self.reset_rerolls()
 
+    def four_of_a_kind(self): # this method is to be used by the button for four of a kind
+        self.active_scoresheet.four_of_a_kind = self.active_scoresheet.score_four_of_a_kind(self.dice_list)
+        self.reset_rerolls()
+    
+    def full_house(self): # this method is to be used by the button for full house
+        self.active_scoresheet.full_house = self.active_scoresheet.score_full_house(self.dice_list)
+        self.reset_rerolls()
+
+    def small_straight(self): # this method is to be used by the button for small straight
+        self.active_scoresheet.small_straight = self.active_scoresheet.score_small_straight(self.dice_list)
+        self.reset_rerolls()
+
+    def large_straight(self): # this method is to be used by the button for large straight
+        self.active_scoresheet.large_straight = self.active_scoresheet.score_large_straight(self.dice_list)
+        self.reset_rerolls()
+
+    def kniffel(self): # this method is to be used by the button for kniffel
+        self.active_scoresheet.kniffel = self.active_scoresheet.score_kniffel(self.dice_list)
+        self.reset_rerolls()
+
+    def chance(self): # this method is to be used by the button for chance
+        self.active_scoresheet.chance = self.active_scoresheet.score_chance(self.dice_list)
+        self.reset_rerolls()
+
+    def p1_tally_total(self):
+        self.__p1_total = sum(self.p1_scoresheet.__dict__.values())
+
+    def p2_tally_total(self):
+        self.__p2_total = sum(self.p2_scoresheet.__dict__.values())
+
+    def get_p1_tally_total(self):
+        return self.__p1_total
+    
+    def get_p2_tally_total(self):
+        return self.__p2_total
+    
+    def save_highscore(self, name, score):
+        highscore_daten = self.load_highscore()
+        user_score = {
+            "Name" : name,
+            "Score" : score
+        }
+        if user_score["Score"] == None: return
+        for index, score in enumerate(highscore_daten):
+            if score["Score"] < user_score["Score"]:
+                highscore_daten.insert(index, user_score)
+                if len(highscore_daten) == 11:
+                    highscore_daten.pop()
+                break
+
+        with open("highscore.json", "w", encoding="utf-8") as file:
+            json.dump(highscore_daten, file, indent=4, ensure_ascii=False)
+    
+    def load_highscore(self):
+        try:
+            with open("highscore.json", "r", encoding="utf-8") as file:
+                highscore_daten=json.load(file)
+            return highscore_daten
+        except FileNotFoundError:
+            standart_file = """[
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                },
+                {
+                    "Name": "---",
+                    "Score": 0
+                }
+            ]"""
+
+            with open("highscore.json", "a", encoding="utf-8") as file:
+                file.write(standart_file)
+            with open("highscore.json", "r", encoding="utf-8") as file:
+                highscore_daten=json.load(file)
+            return highscore_daten
 
 if __name__ == "__main__":
     game = Game()

@@ -808,18 +808,18 @@ class GameScreenMultiplayer(Screen):
 
         self.upper_sum_wo_bonus_label = widgets.Label("gesamt", (100, 275), 26)
         self.upper_sum_wo_bonus_arrow = widgets.ArrowRight((200, 275), 30)
-        self.p1_upper_sum_wo_bonus_show = widgets.ShowLabel(str(""), (268.75, 275, 67.5, 25))
-        self.p2_upper_sum_wo_bonus_show = widgets.ShowLabel(str(""), (341.25, 275, 67.5, 25))
+        self.p1_upper_sum_wo_bonus_show = widgets.ShowLabel(str(0), (268.75, 275, 67.5, 25))
+        self.p2_upper_sum_wo_bonus_show = widgets.ShowLabel(str(0), (341.25, 275, 67.5, 25))
 
         self.bonus_label = widgets.Label("Bonus bei 63", (100, 305), 26)
         self.bonus_arrow = widgets.ArrowRight((200, 305), 30)
-        self.p1_bonus_show = widgets.ShowLabel(str(""), (268.75, 305, 67.5, 25))
-        self.p2_bonus_show = widgets.ShowLabel(str(""), (341.25, 305, 67.5, 25))
+        self.p1_bonus_show = widgets.ShowLabel(str(0), (268.75, 305, 67.5, 25))
+        self.p2_bonus_show = widgets.ShowLabel(str(0), (341.25, 305, 67.5, 25))
 
         self.upper_sum_label = widgets.Label("gesamt oberer Teil", (100, 335), 26)
         self.upper_sum_arrow = widgets.ArrowRight((200, 335), 30)
-        self.p1_upper_sum_show = widgets.ShowLabel(str(""), (268.75, 335, 67.5, 25))
-        self.p2_upper_sum_show = widgets.ShowLabel(str(""), (341.25, 335, 67.5, 25))
+        self.p1_upper_sum_show = widgets.ShowLabel(str(0), (268.75, 335, 67.5, 25))
+        self.p2_upper_sum_show = widgets.ShowLabel(str(0), (341.25, 335, 67.5, 25))
 
         self.upper_right_rect = pygame.Rect((400, 60, 400, 290))
         self.roll_dice_board = pygame.Rect((420, 95, 265, 175))
@@ -864,52 +864,66 @@ class GameScreenMultiplayer(Screen):
         self.three_of_a_kind_label = widgets.Label("Dreierpasch", (100, 365), 26)
         self.three_of_a_kind_arrow = widgets.ArrowRight((200, 365), 30)
         self.p1_three_of_a_kind_button = widgets.Button("", (235, 353.5, 67.5, 25))
+        self.p1_three_of_a_kind_button.set_action(self.enter_three_of_a_kind)
         self.p2_three_of_a_kind_button = widgets.Button("", (307.5, 353.5, 67.5, 25))
+        self.p2_three_of_a_kind_button.set_action(self.enter_three_of_a_kind)
 
         self.four_of_a_kind_label = widgets.Label("Viererpasch", (100, 395), 26)
         self.four_of_a_kind_arrow = widgets.ArrowRight((200, 395), 30)
         self.p1_four_of_a_kind_button = widgets.Button("", (235, 383.5, 67.5, 25))
+        self.p1_four_of_a_kind_button.set_action(self.enter_four_of_a_kind)
         self.p2_four_of_a_kind_button = widgets.Button("", (307.5, 383.5, 67.5, 25))
+        self.p2_four_of_a_kind_button.set_action(self.enter_four_of_a_kind)
 
         self.full_house_label = widgets.Label("Full-House", (100, 425), 26)
         self.full_house_arrow = widgets.ArrowRight((200, 425), 30)
         self.p1_full_house_button = widgets.Button("", (235, 412.5, 67.5, 25))
+        self.p1_full_house_button.set_action(self.enter_full_house)
         self.p2_full_house_button = widgets.Button("", (307.5, 412.5, 67.5, 25))
+        self.p2_full_house_button.set_action(self.enter_full_house)
 
         self.small_road_label = widgets.Label("Kleine Straße", (100, 455), 26 )
         self.small_road_arrow = widgets.ArrowRight((200, 455), 30)
         self.p1_small_road_button = widgets.Button("", (235, 442.5, 67.5, 25))
+        self.p1_small_road_button.set_action(self.enter_small_road)
         self.p2_small_road_button = widgets.Button("", (307.5, 442.5, 67.5, 25))
+        self.p2_small_road_button.set_action(self.enter_small_road)
 
         self.big_road_label = widgets.Label("Große Straße", (100, 485), 26)
         self.big_road_arrow = widgets.ArrowRight((200, 485), 30)
         self.p1_big_road_button = widgets.Button("", (235, 472.5, 67.5, 25))
+        self.p1_big_road_button.set_action(self.enter_big_road)
         self.p2_big_road_button = widgets.Button("", (307.5, 472.5, 67.5, 25))
+        self.p2_big_road_button.set_action(self.enter_big_road)
 
         self.kniffel_label = widgets.Label("Kniffel", (100, 515), 26)
         self.kniffel_arrow = widgets.ArrowRight((200, 515), 30)
         self.p1_kniffel_button = widgets.Button("", (235, 502.5, 67.5, 25))
+        self.p1_kniffel_button.set_action(self.enter_kniffel)
         self.p2_kniffel_button = widgets.Button("", (307.5, 502.5, 67.5, 25))
+        self.p2_kniffel_button.set_action(self.enter_kniffel)
 
         self.chance_label = widgets.Label("Chance", (100, 545), 26)
         self.chance_arrow = widgets.ArrowRight((200, 545), 30)
         self.p1_chance_button = widgets.Button("",(235, 532.5, 67.5, 25))
+        self.p1_chance_button.set_action(self.enter_chance)
         self.p2_chance_button = widgets.Button("",(307.5, 532.5, 67.5, 25))
+        self.p2_chance_button.set_action(self.enter_chance)
 
         self.lower_sum_label = widgets.Label("gesamt unterer Teil", (100, 575), 26)
         self.lower_sum_arrow = widgets.ArrowRight((200, 575), 30)
-        self.p1_lower_sum_show = widgets.ShowLabel(str(""), (268.75, 575, 67.5, 25))
-        self.p2_lower_sum_show = widgets.ShowLabel(str(""), (341.25, 575, 67.5, 25))
+        self.p1_lower_sum_show = widgets.ShowLabel(str(self.game_manager.score_lower_part()), (268.75, 575, 67.5, 25))
+        self.p2_lower_sum_show = widgets.ShowLabel(str(self.game_manager.score_lower_part()), (341.25, 575, 67.5, 25))
 
         self.upper_sum_low_label = widgets.Label("gesamt oberer Teil", (100, 605), 26)
         self.upper_sum_low_arrow = widgets.ArrowRight((200, 605), 30)
-        self.p1_upper_sum_low_show = widgets.ShowLabel(str(""), (268.75, 605, 67.5, 25))
-        self.p2_upper_sum_low_show = widgets.ShowLabel(str(""), (341.25, 605, 67.5, 25))
+        self.p1_upper_sum_low_show = widgets.ShowLabel(str(self.game_manager.score_upper_part() + self.game_manager.active_scoresheet.bonus), (268.75, 605, 67.5, 25))
+        self.p2_upper_sum_low_show = widgets.ShowLabel(str(self.game_manager.score_upper_part() + self.game_manager.active_scoresheet.bonus), (341.25, 605, 67.5, 25))
 
         self.extra_kniffel_label = widgets.Label("Punkte Extra Kniffel", (100, 635), 26)
         self.extra_kniffel_arrow = widgets.ArrowRight((200, 635), 30)
-        self.p1_extra_kniffel_show = widgets.ShowLabel(str(""), (268.75, 635, 67.5, 25))
-        self.p2_extra_kniffel_show = widgets.ShowLabel(str(""), (341.25, 635, 67.5, 25))
+        self.p1_extra_kniffel_show = widgets.ShowLabel(str(self.game_manager.active_scoresheet.kniffel_bonus), (268.75, 635, 67.5, 25))
+        self.p2_extra_kniffel_show = widgets.ShowLabel(str(self.game_manager.active_scoresheet.kniffel_bonus), (341.25, 635, 67.5, 25))
 
         self.end_sum_label = widgets.Label("Endsumme", (100, 665), 26)
         self.end_sum_arrow = widgets.ArrowRight((200, 665), 30)
@@ -1028,7 +1042,7 @@ class GameScreenMultiplayer(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
-            self.game_manager.active_scoresheet.twos = 5
+            self.game_manager.active_scoresheet.twos = 10
             self.game_manager.score_bonus()
             self.game_manager.reset_rerolls()
         else:
@@ -1056,7 +1070,7 @@ class GameScreenMultiplayer(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
-            self.game_manager.active_scoresheet.threes = 5
+            self.game_manager.active_scoresheet.threes = 15
             self.game_manager.score_bonus()
             self.game_manager.reset_rerolls()
         else:
@@ -1084,7 +1098,7 @@ class GameScreenMultiplayer(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
-            self.game_manager.active_scoresheet.fours = 5
+            self.game_manager.active_scoresheet.fours = 20
             self.game_manager.score_bonus()
             self.game_manager.reset_rerolls()
         else:
@@ -1112,7 +1126,7 @@ class GameScreenMultiplayer(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
-            self.game_manager.active_scoresheet.fives = 5
+            self.game_manager.active_scoresheet.fives = 25
             self.game_manager.score_bonus()
             self.game_manager.reset_rerolls()
         else:
@@ -1140,7 +1154,7 @@ class GameScreenMultiplayer(Screen):
         if self.game_manager.get_rerolls() == 3:
             return
         if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
-            self.game_manager.active_scoresheet.sixes = 5
+            self.game_manager.active_scoresheet.sixes = 30
             self.game_manager.score_bonus()
             self.game_manager.reset_rerolls()
         else:
@@ -1163,6 +1177,179 @@ class GameScreenMultiplayer(Screen):
 
         if self.game_manager.game_over_check():
             self.show_results()
+    
+    def enter_three_of_a_kind(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            pass
+        self.game_manager.three_of_a_kind()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            three_of_a_kind_button = self.p1_three_of_a_kind_button
+        else:
+            three_of_a_kind_button = self.p2_three_of_a_kind_button
+
+        three_of_a_kind_button.text = str(self.game_manager.active_scoresheet.three_of_a_kind)
+        three_of_a_kind_button.set_action(None)
+        three_of_a_kind_button.hover_color = (255, 255, 255)
+
+        self.update_sums_lower()
+        self.switch_turn()
+
+    def enter_four_of_a_kind(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            pass
+        self.game_manager.four_of_a_kind()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            four_of_a_kind_button = self.p1_four_of_a_kind_button
+        else:
+            four_of_a_kind_button = self.p2_four_of_a_kind_button
+
+        four_of_a_kind_button.text = str(self.game_manager.active_scoresheet.four_of_a_kind)
+        four_of_a_kind_button.set_action(None)
+        four_of_a_kind_button.hover_color = (255, 255, 255)
+
+        self.update_sums_lower()
+        self.switch_turn()
+    
+    def enter_full_house(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.full_house = 25
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.full_house()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            full_house_button = self.p1_full_house_button
+        else:
+            full_house_button = self.p2_full_house_button
+
+        full_house_button.text = str(self.game_manager.active_scoresheet.full_house)
+        full_house_button.set_action(None)
+        full_house_button.hover_color = (255, 255, 255)
+
+        self.update_sums_lower()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+    
+    def enter_small_road(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.small_straight = 30
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.small_straight()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            small_road_button = self.p1_small_road_button
+        else:
+            small_road_button = self.p2_small_road_button
+
+        small_road_button.text = str(self.game_manager.active_scoresheet.small_straight)
+        small_road_button.set_action(None)
+        small_road_button.hover_color = (255, 255, 255)
+
+        self.update_sums_lower()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def enter_big_road(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            self.game_manager.active_scoresheet.large_straight = 40
+            self.game_manager.reset_rerolls()
+        else:
+            self.game_manager.large_straight()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            big_road_button = self.p1_big_road_button
+        else:
+            big_road_button = self.p2_big_road_button
+
+        big_road_button.text = str(self.game_manager.active_scoresheet.large_straight)
+        big_road_button.set_action(None)
+        big_road_button.hover_color = (255, 255, 255)
+
+        self.update_sums_lower()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def enter_kniffel(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        self.game_manager.kniffel()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            kniffel_button = self.p1_kniffel_button
+        else:
+            kniffel_button = self.p2_kniffel_button
+
+        kniffel_button.text = str(self.game_manager.active_scoresheet.kniffel)
+        kniffel_button.set_action(None)
+        kniffel_button.hover_color = (255, 255, 255)
+
+        self.update_sums_lower()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
+
+    def enter_chance(self):
+        if self.game_manager.get_rerolls() == 3:
+            return
+        if self.game_manager.active_scoresheet.check_kniffel(self.game_manager.dice_list):
+            pass
+        self.game_manager.chance()
+        self.rolls_lamp_line.turn_all_off()
+        self.reset_dice()
+        self.game_manager.unlock_all_dice()
+
+        if self.game_manager.p1_turn:
+            chance_button = self.p1_chance_button
+        else:
+            chance_button = self.p2_chance_button
+
+        chance_button.text = str(self.game_manager.active_scoresheet.chance)
+        chance_button.set_action(None)
+        chance_button.hover_color = (255, 255, 255)
+
+        self.update_sums_lower()
+        self.switch_turn()
+
+        if self.game_manager.game_over_check():
+            self.show_results()
 
     def update_sums_upper(self):
         if self.game_manager.p1_turn:
@@ -1181,6 +1368,20 @@ class GameScreenMultiplayer(Screen):
         upper_sum_wo_bonus_show.text = str(self.game_manager.score_upper_part())
         upper_sum_show.text = str(self.game_manager.score_upper_part() + self.game_manager.active_scoresheet.bonus)
         bonus_show.text = str(self.game_manager.active_scoresheet.bonus)
+        upper_sum_low_show.text = str(self.game_manager.score_upper_part() + self.game_manager.active_scoresheet.bonus)
+        extra_kniffel_show.text = str(self.game_manager.active_scoresheet.kniffel_bonus)
+
+    def update_sums_lower(self):
+        if self.game_manager.p1_turn:
+            lower_sum_show = self.p1_lower_sum_show
+            upper_sum_low_show = self.p1_upper_sum_low_show
+            extra_kniffel_show = self.p1_extra_kniffel_show
+        else:
+            lower_sum_show = self.p2_lower_sum_show
+            upper_sum_low_show = self.p2_upper_sum_low_show
+            extra_kniffel_show = self.p2_extra_kniffel_show
+
+        lower_sum_show.text = str(self.game_manager.score_lower_part())
         upper_sum_low_show.text = str(self.game_manager.score_upper_part() + self.game_manager.active_scoresheet.bonus)
         extra_kniffel_show.text = str(self.game_manager.active_scoresheet.kniffel_bonus)
 
@@ -1370,12 +1571,12 @@ class ResultScreenMultiplayer(Screen):
 
         self.title_label = widgets.Label("Kniffel", (400, 37.5), 80)
         self.highscore_show = widgets.ShowLabel("Highscore", (400, 125, 670, 75), 60)
-        self.highscore_value_show = widgets.ShowLabel(str("XXX"), (400, 215, 670, 90), 60)      # Werte aus multiplayer gamemanager
+        self.highscore_value_show = widgets.ShowLabel(str(self.game_manager.load_highscore()[0]["Score"]), (400, 215, 670, 90), 60)      # Werte aus multiplayer gamemanager
 
-        self.p1_points_show = widgets.ShowLabel(str("XXX"), (220, 420, 340, 300), 200)          # Werte aus multiplayer gamemanager
+        self.p1_points_show = widgets.ShowLabel(str(self.game_manager.get_p1_tally_total()), (220, 420, 340, 300), 200)          # Werte aus multiplayer gamemanager
         self.p1_name_input = widgets.TextField((50, 580, 340, 100))
 
-        self.p2_points_show = widgets.ShowLabel(str("XXX"), (580, 420, 340, 300), 200)          # Werte aus multiplayer gamemanager
+        self.p2_points_show = widgets.ShowLabel(str(self.game_manager.get_p2_tally_total()), (580, 420, 340, 300), 200)          # Werte aus multiplayer gamemanager
         self.p2_name_input = widgets.TextField((410, 580, 340, 100))
 
         self.start_new_game_button = widgets.Button("Start New Game", (100, 700, 200, 50))
@@ -1384,13 +1585,20 @@ class ResultScreenMultiplayer(Screen):
         self.home_button.set_action(self.go_home)
 
     def start_new_game(self):
-        # highscores speichern
-        # multiplayer gamemanager erstellen
+        self.save_highscore()
+        self.game_manager = GameClass.GameMultiplayer()
         self.manager.change_screen(GameScreenMultiplayer(self.manager, self.game_manager))
 
     def go_home(self):
-        # highscores speichern
+        self.save_highscore()
         self.manager.change_screen(StartScreen(self.manager, self.game_manager))
+
+    def save_highscore(self):
+        if self.p1_name_input.text.strip() != "":
+            self.game_manager.save_highscore(self.p1_name_input.text, self.game_manager.get_p1_tally_total())
+
+        if self.p2_name_input.text.strip() != "":
+            self.game_manager.save_highscore(self.p2_name_input.text, self.game_manager.get_p2_tally_total())
 
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)

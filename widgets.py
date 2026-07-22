@@ -42,8 +42,11 @@ class ShowLabel:
             True,
             self.color
         )
+        text_rect = self.image.get_rect(
+            center=self.rect.center
+        )
         pygame.draw.rect(surface, self.frame_color, self.label_rect, 2, 20)
-        surface.blit(self.image, self.rect)      
+        surface.blit(self.image, text_rect)      
 
 class Lamp:
     def __init__(self, rect, color_off=(255, 255, 255), color_on=(255, 0, 0), state = False, border_radius=-1, width=1):
