@@ -248,7 +248,7 @@ class TextField:
         self.rect = rect
         self.text_font = pygame.font.SysFont(None, 80)
 
-    def handle_event(self, event):
+    def handle_event(self, event, others_list: list = []):
         if event.type == pygame.KEYDOWN and self.active_input:
             if event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]
@@ -261,8 +261,11 @@ class TextField:
             if rect.collidepoint(event.pos):
                 if self.active_input:
                     self.active_input = False
-                else:
+                elif self.active_input == False:
                     self.active_input = True
+                    if others_list != []:
+                        for textfield in others_list:
+                            textfield.active_input = False
 
     def draw(self, surface, font_size=80):
         rect = pygame.Rect(self.rect)

@@ -1609,8 +1609,8 @@ class ResultScreenMultiplayer(Screen):
     def handle_events(self, event):
         self.start_new_game_button.handle_event(event)
         self.home_button.handle_event(event)
-        self.p1_name_input.handle_event(event)
-        self.p2_name_input.handle_event(event)
+        self.p1_name_input.handle_event(event, [self.p2_name_input])
+        self.p2_name_input.handle_event(event, [self.p1_name_input])
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
