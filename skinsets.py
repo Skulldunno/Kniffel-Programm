@@ -103,3 +103,17 @@ class AntiSkinset(SkinSet):
             5 : "anti_five.png",
             6 : "anti_six.png"
         }
+
+class PurpleSkinset(SkinSet):
+    def __init__(self):
+        super().__init__()
+
+        self.pngs = {
+                    0 : "empty.png",
+                    1 : "purple_dice_one.png",
+                    2 : "purple_dice_two.png",
+                    3 : "purple_dice_three.png",
+                    4 : "purple_dice_four.png",
+                    5 : "purple_dice_five.png",
+                    6 : "purple_dice_six.png"
+                }

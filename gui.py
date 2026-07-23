@@ -202,12 +202,14 @@ class GameScreenSinglerplayer(Screen):
         self.blue_skinset = skinsets.BlueSkinset()
         self.roman_skinset = skinsets.RomanSkinset()
         self.anti_skinset = skinsets.AntiSkinset()
+        self.purple_skinset = skinsets.PurpleSkinset()
 
         self.skinchanger = skinsets.SkinChanger()
         self.skinchanger.add_skinset("black", self.std_skinset)
         self.skinchanger.add_skinset("blue", self.blue_skinset)
         self.skinchanger.add_skinset("roman", self.roman_skinset)
         self.skinchanger.add_skinset("anti", self.anti_skinset)
+        self.skinchanger.add_skinset("purple", self.purple_skinset)
 
         self.skinchanger.set_current_skinset(self.game_manager.settings.get_value("skinset"))
 
@@ -286,6 +288,8 @@ class GameScreenSinglerplayer(Screen):
         self.roman_skinset.skinset_button.set_action(self.change_skinset_to_roman)
         self.anti_skinset.skinset_button = skinsets.SkinsetButton((556, 540, 32, 32), "anti_six.png")
         self.anti_skinset.skinset_button.set_action(self.change_skinset_to_anti)
+        self.purple_skinset.skinset_button = skinsets.SkinsetButton((598, 540, 32, 32), "purple_dice_six.png")
+        self.purple_skinset.skinset_button.set_action(self.change_skinset_to_purple)
 
         self.start_new_game_button = widgets.Button("Start new Game", (200, 712.5, 195, 75))
         self.start_new_game_button.set_action(self.restart_game)
@@ -311,6 +315,11 @@ class GameScreenSinglerplayer(Screen):
         self.skinchanger.set_current_skinset("anti")
         self.game_manager.settings.set_value("skinset", "anti")
         self.skinchanger.update_skinset()
+
+    def change_skinset_to_purple(self):
+            self.skinchanger.set_current_skinset("purple")
+            self.game_manager.settings.set_value("skinset", "purple")
+            self.skinchanger.update_skinset()
     
     def reset_dice(self):
         self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32), self.skinchanger.get_current_skinset())
@@ -602,6 +611,7 @@ class GameScreenSinglerplayer(Screen):
         self.blue_skinset.skinset_button.handle_event(event)
         self.roman_skinset.skinset_button.handle_event(event)
         self.anti_skinset.skinset_button.handle_event(event)
+        self.purple_skinset.skinset_button.handle_event(event)
 
     def update_sums_upper(self):
         self.upper_sum_wo_bonus_show.text = str(self.game_manager.score_upper_part())
@@ -711,6 +721,7 @@ class GameScreenSinglerplayer(Screen):
         self.blue_skinset.skinset_button.draw(surface)
         self.roman_skinset.skinset_button.draw(surface)
         self.anti_skinset.skinset_button.draw(surface)
+        self.purple_skinset.skinset_button.draw(surface)
 
         pygame.draw.line(surface, (0, 0, 0), (0, 700), (800, 700), 2)
         self.start_new_game_button.draw(surface)
