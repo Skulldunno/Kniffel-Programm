@@ -203,6 +203,8 @@ class GameScreenSinglerplayer(Screen):
         self.roman_skinset = skinsets.RomanSkinset()
         self.anti_skinset = skinsets.AntiSkinset()
         self.purple_skinset = skinsets.PurpleSkinset()
+        self.ice_skinset = skinsets.IceSkinset()
+        self.poison_skinset = skinsets.PoisonSkinset()
 
         self.skinchanger = skinsets.SkinChanger()
         self.skinchanger.add_skinset("black", self.std_skinset)
@@ -210,6 +212,8 @@ class GameScreenSinglerplayer(Screen):
         self.skinchanger.add_skinset("roman", self.roman_skinset)
         self.skinchanger.add_skinset("anti", self.anti_skinset)
         self.skinchanger.add_skinset("purple", self.purple_skinset)
+        self.skinchanger.add_skinset("ice", self.ice_skinset)
+        self.skinchanger.add_skinset("poison", self.poison_skinset)
 
         self.skinchanger.set_current_skinset(self.game_manager.settings.get_value("skinset"))
 
@@ -290,6 +294,10 @@ class GameScreenSinglerplayer(Screen):
         self.anti_skinset.skinset_button.set_action(self.change_skinset_to_anti)
         self.purple_skinset.skinset_button = skinsets.SkinsetButton((598, 540, 32, 32), "purple_dice_six.png")
         self.purple_skinset.skinset_button.set_action(self.change_skinset_to_purple)
+        self.ice_skinset.skinset_button = skinsets.SkinsetButton((640, 540, 32, 32), "ice_dice_six.png")
+        self.ice_skinset.skinset_button.set_action(self.change_skinset_to_ice)
+        self.poison_skinset.skinset_button = skinsets.SkinsetButton((682, 540, 32, 32), "poison_dice_six.png")
+        self.poison_skinset.skinset_button.set_action(self.change_skinset_to_poison)
 
         self.start_new_game_button = widgets.Button("Start new Game", (200, 712.5, 195, 75))
         self.start_new_game_button.set_action(self.restart_game)
@@ -317,9 +325,19 @@ class GameScreenSinglerplayer(Screen):
         self.skinchanger.update_skinset()
 
     def change_skinset_to_purple(self):
-            self.skinchanger.set_current_skinset("purple")
-            self.game_manager.settings.set_value("skinset", "purple")
-            self.skinchanger.update_skinset()
+        self.skinchanger.set_current_skinset("purple")
+        self.game_manager.settings.set_value("skinset", "purple")
+        self.skinchanger.update_skinset()
+
+    def change_skinset_to_ice(self):
+        self.skinchanger.set_current_skinset("ice")
+        self.game_manager.settings.set_value("skinset", "ice")
+        self.skinchanger.update_skinset()
+
+    def change_skinset_to_poison(self):
+        self.skinchanger.set_current_skinset("poison")
+        self.game_manager.settings.set_value("skinset", "poison")
+        self.skinchanger.update_skinset()
     
     def reset_dice(self):
         self.dice_one = widgets.KlickableDice(0, (430, 145, 32, 32), (725, 99, 32, 32), self.skinchanger.get_current_skinset())
@@ -612,6 +630,8 @@ class GameScreenSinglerplayer(Screen):
         self.roman_skinset.skinset_button.handle_event(event)
         self.anti_skinset.skinset_button.handle_event(event)
         self.purple_skinset.skinset_button.handle_event(event)
+        self.ice_skinset.skinset_button.handle_event(event)
+        self.poison_skinset.skinset_button.handle_event(event)
 
     def update_sums_upper(self):
         self.upper_sum_wo_bonus_show.text = str(self.game_manager.score_upper_part())
@@ -722,6 +742,8 @@ class GameScreenSinglerplayer(Screen):
         self.roman_skinset.skinset_button.draw(surface)
         self.anti_skinset.skinset_button.draw(surface)
         self.purple_skinset.skinset_button.draw(surface)
+        self.ice_skinset.skinset_button.draw(surface)
+        self.poison_skinset.skinset_button.draw(surface)
 
         pygame.draw.line(surface, (0, 0, 0), (0, 700), (800, 700), 2)
         self.start_new_game_button.draw(surface)
@@ -851,12 +873,18 @@ class GameScreenMultiplayer(Screen):
         self.blue_skinset = skinsets.BlueSkinset()
         self.roman_skinset = skinsets.RomanSkinset()
         self.anti_skinset = skinsets.AntiSkinset()
+        self.purple_skinset = skinsets.PurpleSkinset()
+        self.ice_skinset = skinsets.IceSkinset()
+        self.poison_skinset = skinsets.PoisonSkinset()
 
         self.skinchanger = skinsets.SkinChanger()
         self.skinchanger.add_skinset("black", self.std_skinset)
         self.skinchanger.add_skinset("blue", self.blue_skinset)
         self.skinchanger.add_skinset("roman", self.roman_skinset)
         self.skinchanger.add_skinset("anti", self.anti_skinset)
+        self.skinchanger.add_skinset("purple", self.purple_skinset)
+        self.skinchanger.add_skinset("ice", self.ice_skinset)
+        self.skinchanger.add_skinset("poison", self.poison_skinset)
 
         self.skinchanger.set_current_skinset(self.game_manager.settings.get_value("skinset"))
 
@@ -963,6 +991,12 @@ class GameScreenMultiplayer(Screen):
         self.roman_skinset.skinset_button.set_action(self.change_skinset_to_roman)
         self.anti_skinset.skinset_button = skinsets.SkinsetButton((556, 540, 32, 32), "anti_six.png")
         self.anti_skinset.skinset_button.set_action(self.change_skinset_to_anti)
+        self.purple_skinset.skinset_button = skinsets.SkinsetButton((598, 540, 32, 32), "purple_dice_six.png")
+        self.purple_skinset.skinset_button.set_action(self.change_skinset_to_purple)
+        self.ice_skinset.skinset_button = skinsets.SkinsetButton((640, 540, 32, 32), "ice_dice_six.png")
+        self.ice_skinset.skinset_button.set_action(self.change_skinset_to_ice)
+        self.poison_skinset.skinset_button = skinsets.SkinsetButton((682, 540, 32, 32), "poison_dice_six.png")
+        self.poison_skinset.skinset_button.set_action(self.change_skinset_to_poison)
 
         self.start_new_game_button = widgets.Button("Start new Game", (200, 712.5, 195, 75))
         self.start_new_game_button.set_action(self.restart_game)
@@ -1001,6 +1035,21 @@ class GameScreenMultiplayer(Screen):
     def change_skinset_to_anti(self):
         self.skinchanger.set_current_skinset("anti")
         self.game_manager.settings.set_value("skinset", "anti")
+        self.skinchanger.update_skinset()
+
+    def change_skinset_to_purple(self):
+        self.skinchanger.set_current_skinset("purple")
+        self.game_manager.settings.set_value("skinset", "purple")
+        self.skinchanger.update_skinset()
+
+    def change_skinset_to_ice(self):
+        self.skinchanger.set_current_skinset("ice")
+        self.game_manager.settings.set_value("skinset", "ice")
+        self.skinchanger.update_skinset()
+
+    def change_skinset_to_poison(self):
+        self.skinchanger.set_current_skinset("poison")
+        self.game_manager.settings.set_value("skinset", "poison")
         self.skinchanger.update_skinset()
 
     def roll_all_dice(self):
@@ -1463,6 +1512,9 @@ class GameScreenMultiplayer(Screen):
         self.blue_skinset.skinset_button.handle_event(event)
         self.roman_skinset.skinset_button.handle_event(event)
         self.anti_skinset.skinset_button.handle_event(event)
+        self.purple_skinset.skinset_button.handle_event(event)
+        self.ice_skinset.skinset_button.handle_event(event)
+        self.poison_skinset.skinset_button.handle_event(event)
 
     def draw(self, surface):
         surface.fill((255, 255, 255))
@@ -1583,6 +1635,10 @@ class GameScreenMultiplayer(Screen):
         self.blue_skinset.skinset_button.draw(surface)
         self.roman_skinset.skinset_button.draw(surface)
         self.anti_skinset.skinset_button.draw(surface)
+        self.purple_skinset.skinset_button.draw(surface)
+        self.ice_skinset.skinset_button.draw(surface)
+        self.poison_skinset.skinset_button.draw(surface)
+
 
         pygame.draw.line(surface, (0, 0, 0), (0, 700), (800, 700), 2)
         self.start_new_game_button.draw(surface)

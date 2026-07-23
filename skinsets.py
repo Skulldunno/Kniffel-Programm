@@ -109,11 +109,39 @@ class PurpleSkinset(SkinSet):
         super().__init__()
 
         self.pngs = {
-                    0 : "empty.png",
-                    1 : "purple_dice_one.png",
-                    2 : "purple_dice_two.png",
-                    3 : "purple_dice_three.png",
-                    4 : "purple_dice_four.png",
-                    5 : "purple_dice_five.png",
-                    6 : "purple_dice_six.png"
-                }
+            0 : "empty.png",
+            1 : "purple_dice_one.png",
+            2 : "purple_dice_two.png",
+            3 : "purple_dice_three.png",
+            4 : "purple_dice_four.png",
+            5 : "purple_dice_five.png",
+            6 : "purple_dice_six.png"
+        }
+
+class IceSkinset(SkinSet):
+    def __init__(self):
+        super().__init__()
+
+        self.pngs = {
+            0 : "empty.png",
+            1 : "ice_dice_one.png",
+            2 : "ice_dice_two.png",
+            3 : "ice_dice_three.png",
+            4 : "ice_dice_four.png",
+            5 : "ice_dice_five.png",
+            6 : "ice_dice_six.png"
+        }
+
+class PoisonSkinset(SkinSet):
+    def __init__(self):
+        super().__init__()
+
+        self.pngs = {
+            0 : "empty.png",
+            1 : "poison_dice_one.png",
+            2 : "poison_dice_two.png",
+            3 : "poison_dice_three.png",
+            4 : "poison_dice_four.png",
+            5 : "poison_dice_five.png",
+            6 : "poison_dice_six.png"
+        }
