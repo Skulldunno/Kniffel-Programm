@@ -1577,12 +1577,12 @@ class ResultScreenMultiplayer(Screen):
 
         self.title_label = widgets.Label("Kniffel", (400, 37.5), 80)
         self.highscore_show = widgets.ShowLabel("Highscore", (400, 125, 670, 75), 60)
-        self.highscore_value_show = widgets.ShowLabel(str(self.game_manager.load_highscore()[0]["Score"]), (400, 215, 670, 90), 60)      # Werte aus multiplayer gamemanager
+        self.highscore_value_show = widgets.ShowLabel(str(self.game_manager.load_highscore()[0]["Score"]), (400, 215, 670, 90), 60)
 
-        self.p1_points_show = widgets.ShowLabel(str(self.game_manager.get_p1_tally_total()), (220, 420, 340, 300), 200)          # Werte aus multiplayer gamemanager
+        self.p1_points_show = widgets.ShowLabel(str(self.game_manager.get_p1_tally_total()), (220, 420, 340, 300), 200)
         self.p1_name_input = widgets.TextField((50, 580, 340, 100))
 
-        self.p2_points_show = widgets.ShowLabel(str(self.game_manager.get_p2_tally_total()), (580, 420, 340, 300), 200)          # Werte aus multiplayer gamemanager
+        self.p2_points_show = widgets.ShowLabel(str(self.game_manager.get_p2_tally_total()), (580, 420, 340, 300), 200)
         self.p2_name_input = widgets.TextField((410, 580, 340, 100))
 
         self.start_new_game_button = widgets.Button("Start New Game", (100, 700, 200, 50))
