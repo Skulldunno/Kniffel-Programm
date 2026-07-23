@@ -24,7 +24,7 @@ class Gui:
 
         self.current_screen = StartScreen(self, self.game_manager)
 
-        self.iconchanger = IconChanger()
+        self.iconchanger = IconChanger(active=False)
 
     def change_screen(self, new_screen):
         self.current_screen = new_screen
@@ -42,8 +42,7 @@ class Gui:
             self.current_screen.update()
             self.current_screen.draw(self.screen)
 
-            #self.iconchanger.increment_frame_counter()
-            #pygame.display.set_icon(self.iconchanger.icon_list[self.iconchanger.icon_index])
+            self.iconchanger.increment_frame_counter()
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -52,13 +51,16 @@ class Gui:
 
 
 class IconChanger:
-    def __init__(self):
+    def __init__(self, cycle: int = 60, active: bool = False):
         icon_one_png = pygame.image.load("assets/icon_one.png")
         icon_two_png = pygame.image.load("assets/icon_two.png")
         icon_three_png = pygame.image.load("assets/icon_three.png")
         icon_four_png = pygame.image.load("assets/icon_four.png")
         icon_five_png = pygame.image.load("assets/icon_five.png")
         icon_six_png = pygame.image.load("assets/icon_six.png")
+
+        self.cycle = cycle
+        self.active = active
 
         self.icon_list = [
             icon_one_png,
@@ -71,18 +73,22 @@ class IconChanger:
         self.icon_index = 5
         self.frame_counter = 0
 
-    def change_index(self):
+    def __change_index(self) -> None:
         alt = self.icon_index
         while alt == self.icon_index:
-            self.icon_index = random.randint(0, 5)       
+            self.icon_index = random.randint(0, 5)
+        if self.active:
+            self.__set_icon()       
 
-    def increment_frame_counter(self):
-        if self.frame_counter == 60:
+    def increment_frame_counter(self) -> None:
+        if self.frame_counter == self.cycle:
             self.frame_counter = 0
-            self.change_index()
+            self.__change_index()
         else:
             self.frame_counter += 1
 
+    def __set_icon(self) -> None:
+        pygame.display.set_icon(self.icon_list[self.icon_index])
 
 class Screen:
     def __init__(self, manager, game_manager):
